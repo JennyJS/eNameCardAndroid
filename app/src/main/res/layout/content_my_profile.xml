@@ -11,5 +11,11 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.scu.jenny.enamecard.MyProfile"
     tools:showIn="@layout/activity_my_profile">
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list_view"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"></ListView>
 
 </RelativeLayout>

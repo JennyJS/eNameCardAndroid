@@ -30,7 +30,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/editText3"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="25dp"
         android:layout_below="@+id/textView2"
         android:layout_alignLeft="@+id/textView2"
         android:layout_alignStart="@+id/textView2" />
@@ -41,10 +41,29 @@
         android:layout_height="wrap_content"
         android:text="Enter"
         android:textColor="#EBFFFF"
-        android:id="@+id/button3"
-        android:layout_alignBottom="@+id/editText3"
+        android:id="@+id/btn_enter_logIn"
+        android:background="@drawable/mybutton"
+        android:layout_below="@+id/editText3"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/mybutton"
-        />
+        android:layout_marginTop="70dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText4"
+        android:layout_alignBottom="@+id/btn_enter_logIn"
+        android:layout_alignLeft="@+id/editText3"
+        android:layout_alignStart="@+id/editText3"
+        android:layout_alignRight="@+id/editText3"
+        android:layout_alignEnd="@+id/editText3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type in your verification code"
+        android:id="@+id/textView"
+        android:layout_above="@+id/editText4"
+        android:layout_alignLeft="@+id/editText4"
+        android:layout_alignStart="@+id/editText4" />
 </RelativeLayout>
