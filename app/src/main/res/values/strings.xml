@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">eNameCard</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_log_in">LogInActivity</string>
+    <string name="title_activity_main_page">MainPageActivity</string>
+</resources>
