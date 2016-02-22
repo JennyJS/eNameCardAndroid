@@ -1,21 +1,9 @@
 package com.scu.jenny.enamecard;
 
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TabHost;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainPageActivity extends TabActivity  {
 
@@ -36,17 +24,19 @@ public class MainPageActivity extends TabActivity  {
 
         // Set the Tab name and Activity
         // that will be opened when particular Tab will be selected
-        tab1.setIndicator("My Profile");
-        tab1.setContent(new Intent(this,MyProfile.class));
-
         tab2.setIndicator("Cards");
-        tab2.setContent(new Intent(this,MyProfile.class));
+        tab2.setContent(new Intent(this,NameCardsActivity.class));
+
+        tab1.setIndicator("My Profile");
+        tab1.setContent(new Intent(this,MyProfileActivity.class));
+
+
 
         tab3.setIndicator("Scan");
-        tab3.setContent(new Intent(this,MyProfile.class));
+        tab3.setContent(new Intent(this,ScanActivity.class));
 
         tab4.setIndicator("My QR code");
-        tab4.setContent(new Intent(this,MyProfile.class));
+        tab4.setContent(new Intent(this,QRActivity.class));
 
 
 

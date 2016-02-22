@@ -9,4 +9,7 @@
     <color name="color40PGray">#B6600000</color>
     <color name="wechatGreen">#31B139</color>
     <color name="archerGray">#616263</color>
+    <color name="grayBackGround">#E7E8EA</color>
+    <color name="drakBG">#3C3D3E</color>
+    <color name="brightText">#EBFFFF</color>
 </resources>

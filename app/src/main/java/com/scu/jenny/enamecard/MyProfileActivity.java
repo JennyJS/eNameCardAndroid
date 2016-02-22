@@ -11,7 +11,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyProfile extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity {
     private ListView myListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,5 +26,4 @@ public class MyProfile extends AppCompatActivity {
         myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
 
     }
-
 }
