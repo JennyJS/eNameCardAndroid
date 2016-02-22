@@ -2,5 +2,11 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#80FF4081</color>
+    <color name="color5PGray">#0D000000</color>
+    <color name="color70PGray">#B3000000</color>
+    <color name="color50PGray">#B8000000</color>
+    <color name="color40PGray">#B6600000</color>
+    <color name="wechatGreen">#31B139</color>
+    <color name="archerGray">#616263</color>
 </resources>
