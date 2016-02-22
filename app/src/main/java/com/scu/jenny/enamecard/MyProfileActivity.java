@@ -20,8 +20,10 @@ public class MyProfileActivity extends AppCompatActivity {
 
         myListView = (ListView)findViewById(R.id.list_view);
         final List<Connections> connectionList = new ArrayList<>();
-        connectionList.add(new Connections("icon_phone_call.jpg", "icon_add.jpg"));
-        connectionList.add(new Connections("icon_facebook.jpg", "icon_add.jpg"));
+        connectionList.add(new Connections("icon_qora.png", "icon_add.jpg"));
+        connectionList.add(new Connections("icon_twitter.png", "icon_add.jpg"));
+        connectionList.add(new Connections("icon_facebook.png", "icon_add.jpg"));
+        connectionList.add(new Connections("icon_linkedin.png", "icon_add.jpg"));
 
         myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
 

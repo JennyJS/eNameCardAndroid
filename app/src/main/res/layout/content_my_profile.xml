@@ -29,7 +29,7 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_weight="0.3"
-            android:src="@drawable/icon_facebook"
+            android:src="@drawable/icon_phone_call"
             />
 
         <LinearLayout

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,10 +30,8 @@ public class CustomAdapter extends ArrayAdapter{
         final Connections connections = connectionsList.get(position);
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View row = inflater.inflate(R.layout.customized_row, null);
-//
-//        holder.textView = (TextView)row.findViewById(R.id.textView);
-//        holder.textView.setText(animal.getAnimalName());
-        ImageView imageView1 = (ImageView) row.findViewById(R.id.imageView);
+
+        ImageView imageView1 = (ImageView) row.findViewById(R.id.social_media_view);
         ImageView imageView2 = (ImageView) row.findViewById(R.id.imageView2);
 
         try {
