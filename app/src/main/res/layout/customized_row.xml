@@ -22,6 +22,6 @@
         android:layout_gravity="center_vertical"
         android:contentDescription="Add"
         android:src="@drawable/icon_add"
-        android:paddingLeft="150dp"/>
+        android:layout_marginLeft="150dp"/>
 
 </LinearLayout>
