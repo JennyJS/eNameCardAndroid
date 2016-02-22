@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainPageActivity extends TabActivity  {
-    List<Fragment> tabFragmentList = new ArrayList<Fragment>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,26 +57,4 @@ public class MainPageActivity extends TabActivity  {
         tabHost.addTab(tab4);
 
     }
-
-//    private void setupUI() {
-//        RadioButton rbFirst = (RadioButton) findViewById(R.id.first);
-//        RadioButton rbSecond = (RadioButton) findViewById(R.id.second);
-//
-////        rbFirst.setButtonDrawable(R.drawable.ebay);
-////        rbSecond.setButtonDrawable(R.drawable.flickr);
-//
-//        RadioGroup rg = (RadioGroup) findViewById(R.id.states);
-//        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            public void onCheckedChanged(RadioGroup group, final int checkedId) {
-//                switch (checkedId) {
-//                    case R.id.first:
-//                        getTabHost().setCurrentTab(0);
-//                        break;
-//                    case R.id.second:
-//                        getTabHost().setCurrentTab(1);
-//                        break;
-//                }
-//            }
-//        });
-//    }
 }
