@@ -12,4 +12,5 @@
     <color name="grayBackGround">#E7E8EA</color>
     <color name="drakBG">#3C3D3E</color>
     <color name="brightText">#EBFFFF</color>
+    <color name="brightBG">#F6F6F6</color>
 </resources>
