@@ -8,5 +8,23 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.scu.jenny.enamecard.QRActivity">
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:contentDescription="QR Code"
+        android:id="@+id/qr_code_image"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manhong&apos;s QR code"
+        android:id="@+id/textView3"
+        android:layout_marginBottom="55dp"
+        android:layout_above="@+id/qr_code_image"
+        android:layout_centerHorizontal="true"
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
