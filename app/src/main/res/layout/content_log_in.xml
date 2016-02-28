@@ -79,13 +79,12 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
+            android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
             android:id="@+id/verfication_code_edit_text"
             android:layout_marginBottom="37dp"
-            android:gravity="center"/>
+            android:gravity="center_vertical"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
