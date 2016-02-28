@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText3"
+        android:id="@+id/phone_number_edit_text"
         android:layout_marginTop="25dp"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"

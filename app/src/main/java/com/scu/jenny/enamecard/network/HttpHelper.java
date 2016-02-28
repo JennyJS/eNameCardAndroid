@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class HttpHelper {
     private static final String domain = "http://enamecard-jennyjs.rhcloud.com";
-    private static final int TIME_OUT = 500;
+    private static final int TIME_OUT = 5000;
 
     public static String sendGet(String path) {
         HttpURLConnection c = null;
@@ -95,7 +95,6 @@ public class HttpHelper {
             int status = connection.getResponseCode();
             switch (status) {
                 case 200:
-                case 201:
                     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                     String line;
@@ -103,7 +102,9 @@ public class HttpHelper {
                         sb.append(line+"\n");
                     }
                     br.close();
-
+                    break;
+                default:
+                    return "{\"status\":\"failure\"}";
             }
         } catch (MalformedURLException ex) {
             Logger.getLogger(HttpHelper.class.getName()).log(Level.SEVERE, null, ex);
