@@ -56,7 +56,7 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private void requestSecret(){
-        JSONObject jsonObject = new JSONObject();
+        final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("session_id", this.sessionId);
             jsonObject.put("verification_code", verificationCodeEditText.getText());
@@ -65,7 +65,7 @@ public class LogInActivity extends AppCompatActivity {
                 public void process(String jsonRespose) {
                     try {
                         JSONObject object = new JSONObject(jsonRespose);
-                        if (object.get("status").equals("success")){
+                        if (object.has("secret")){
                             String secret = object.getString("secret");
                             KVStore.getInstance().set("secret", secret);
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
@@ -95,7 +95,8 @@ public class LogInActivity extends AppCompatActivity {
                 public void process(String jsonRespose) {
                     try {
                         JSONObject object = new JSONObject(jsonRespose);
-                        if (object.get("status").equals("success")) {
+                        System.out.print(object.toString());
+                        if (object.has("session_id")) {
                             LogInActivity.sessionId = (String)object.get("session_id");
                         } else {
                             Toast.makeText(getApplicationContext(), "Sever error", Toast.LENGTH_SHORT).show();
