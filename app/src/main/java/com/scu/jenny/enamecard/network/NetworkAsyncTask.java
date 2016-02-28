@@ -13,11 +13,13 @@ public class NetworkAsyncTask extends AsyncTask<String, Integer, Double> {
     private Activity activity;
     private ProgressDialog dialog;
     private final String progressMessage;
+    private final ProcessResponse callback;
 
-    public NetworkAsyncTask(Activity activity, String progressMessage) {
+    public NetworkAsyncTask(Activity activity, String progressMessage, ProcessResponse callback) {
         this.activity = activity;
         dialog = new ProgressDialog(this.activity);
         this.progressMessage = progressMessage;
+        this.callback = callback;
     }
 
     @Override
@@ -42,7 +44,8 @@ public class NetworkAsyncTask extends AsyncTask<String, Integer, Double> {
                 case "GET":
                     HttpHelper.sendGet(params[1]);
                 case "POST":
-                    HttpHelper.sendPost(params[1], params[2]);
+                    String response = HttpHelper.sendPost(params[1], params[2]);
+                    this.callback.process(response);
                 case "PUT":
                 case "DELETE":
             }
