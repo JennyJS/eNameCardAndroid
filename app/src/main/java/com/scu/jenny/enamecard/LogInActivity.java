@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
@@ -22,6 +23,9 @@ public class LogInActivity extends AppCompatActivity {
     EditText phoneNumberEditText;
     EditText verificationCodeEditText;
 
+    LinearLayout verificationCodeLayout;
+    LinearLayout phoneNumberLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,11 @@ public class LogInActivity extends AppCompatActivity {
         getVerificationCodeBtn = (Button) findViewById(R.id.button);
         phoneNumberEditText = (EditText) findViewById(R.id.phone_number_edit_text);
         verificationCodeEditText = (EditText) findViewById(R.id.verfication_code_edit_text);
+
+        this.verificationCodeLayout = (LinearLayout) findViewById(R.id.verification_code_layout);
+        this.phoneNumberLayout = (LinearLayout) findViewById(R.id.phone_number_layout);
+
+        enablePhoneNumberInput();
 
         getVerificationCodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +80,12 @@ public class LogInActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Incorrect Verification Code", Toast.LENGTH_LONG).show();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Incorrect Verification Code", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -98,8 +112,14 @@ public class LogInActivity extends AppCompatActivity {
                         System.out.print(object.toString());
                         if (object.has("session_id")) {
                             LogInActivity.sessionId = (String)object.get("session_id");
+                            enableVerificationInput();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Sever error", Toast.LENGTH_SHORT).show();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Sever error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -112,4 +132,45 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
+    private void enablePhoneNumberInput() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                phoneNumberLayout.setAlpha(1.0f);
+
+                for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
+                    View child = verificationCodeLayout.getChildAt(i);
+                    child.setEnabled(true);
+                }
+
+                verificationCodeLayout.setAlpha(0.2f);
+
+                for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
+                    View child = verificationCodeLayout.getChildAt(i);
+                    child.setEnabled(false);
+                }
+            }
+        });
+    }
+
+    private void enableVerificationInput() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                phoneNumberLayout.setAlpha(0.2f);
+                for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
+                    View child = phoneNumberLayout.getChildAt(i);
+                    child.setEnabled(false);
+                }
+
+                verificationCodeLayout.setAlpha(1.0f);
+
+                for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
+                    View child = verificationCodeLayout.getChildAt(i);
+                    child.setEnabled(true);
+                }
+            }
+        });
+
+    }
 }

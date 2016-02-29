@@ -20,13 +20,13 @@
         android:layout_height="0dp"
         android:layout_weight="0.5"
         android:orientation="vertical"
+        android:id="@+id/phone_number_layout"
         >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Log in with your phone number"
-            android:id="@+id/textView2"
             android:layout_marginTop="80dp"
             android:textColor="@color/archerGray"
             android:textSize="20sp"
@@ -61,6 +61,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="0.5"
+        android:id="@+id/verification_code_layout"
         >
 
         <TextView
