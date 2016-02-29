@@ -1,11 +1,13 @@
 package com.scu.jenny.enamecard;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ public class LogInActivity extends AppCompatActivity {
     EditText phoneNumberEditText;
     EditText verificationCodeEditText;
 
+    LinearLayout loginViewLayout;
     LinearLayout verificationCodeLayout;
     LinearLayout phoneNumberLayout;
 
@@ -45,10 +48,11 @@ public class LogInActivity extends AppCompatActivity {
         phoneNumberEditText = (EditText) findViewById(R.id.phone_number_edit_text);
         verificationCodeEditText = (EditText) findViewById(R.id.verfication_code_edit_text);
 
+        this.loginViewLayout = (LinearLayout) findViewById(R.id.login_view_layout);
         this.verificationCodeLayout = (LinearLayout) findViewById(R.id.verification_code_layout);
         this.phoneNumberLayout = (LinearLayout) findViewById(R.id.phone_number_layout);
 
-        enablePhoneNumberInput();
+        moveViewDown(200);
 
         getVerificationCodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +116,6 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private class FetchUserProfileCallback implements ProcessResponse {
-
         @Override
         public void process(String jsonRespose) {
             try {
@@ -147,7 +150,7 @@ public class LogInActivity extends AppCompatActivity {
                         System.out.print(object.toString());
                         if (object.has("session_id")) {
                             LogInActivity.sessionId = (String)object.get("session_id");
-                            enableVerificationInput();
+                            moveViewUp(700);
                         } else {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -168,45 +171,102 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
-    private void enablePhoneNumberInput() {
+
+    /*******************************************/
+    /****** Animation Run on Main Thread *******/
+    /*******************************************/
+    private static final int MOVE_DURATION = 500;
+
+    private void moveViewDown(final float moveDownDistance) {
+        final TranslateAnimation anim = new TranslateAnimation(0, 0, 0, moveDownDistance);
+        anim.setDuration(MOVE_DURATION);
+
+        anim.setAnimationListener(new TranslateAnimation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                enablePhoneNumberInput();
+                CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) loginViewLayout.getLayoutParams();
+                params.bottomMargin -= moveDownDistance;
+                params.topMargin += moveDownDistance;
+                loginViewLayout.setLayoutParams(params);
+            }
+        });
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                phoneNumberLayout.setAlpha(1.0f);
-
-                for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
-                    View child = verificationCodeLayout.getChildAt(i);
-                    child.setEnabled(true);
-                }
-
-                verificationCodeLayout.setAlpha(0.2f);
-
-                for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
-                    View child = verificationCodeLayout.getChildAt(i);
-                    child.setEnabled(false);
-                }
+                loginViewLayout.startAnimation(anim);
             }
         });
     }
 
-    private void enableVerificationInput() {
-        runOnUiThread(new Runnable() {
+    private void moveViewUp(final int moveUpDistance) {
+        final TranslateAnimation anim = new TranslateAnimation(0, 0, 0, -moveUpDistance);
+        anim.setDuration(MOVE_DURATION);
+
+        anim.setAnimationListener(new TranslateAnimation.AnimationListener() {
             @Override
-            public void run() {
-                phoneNumberLayout.setAlpha(0.2f);
-                for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
-                    View child = phoneNumberLayout.getChildAt(i);
-                    child.setEnabled(false);
-                }
+            public void onAnimationStart(Animation animation) {
+            }
 
-                verificationCodeLayout.setAlpha(1.0f);
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
 
-                for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
-                    View child = verificationCodeLayout.getChildAt(i);
-                    child.setEnabled(true);
-                }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                enableVerificationInput();
+                CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) loginViewLayout.getLayoutParams();
+                params.bottomMargin += moveUpDistance;
+                params.topMargin -= moveUpDistance;
+                loginViewLayout.setLayoutParams(params);
             }
         });
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loginViewLayout.startAnimation(anim);
+            }
+        });
+    }
+
+    private void enablePhoneNumberInput() {
+        phoneNumberLayout.setAlpha(1.0f);
+
+        for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
+            View child = verificationCodeLayout.getChildAt(i);
+            child.setEnabled(true);
+        }
+
+        verificationCodeLayout.setAlpha(0f);
+
+        for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
+            View child = verificationCodeLayout.getChildAt(i);
+            child.setEnabled(false);
+        }
+    }
+
+    private void enableVerificationInput() {
+        phoneNumberLayout.setAlpha(0f);
+        for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
+            View child = phoneNumberLayout.getChildAt(i);
+            child.setEnabled(false);
+        }
+
+        verificationCodeLayout.setAlpha(1.0f);
+
+        for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
+            View child = verificationCodeLayout.getChildAt(i);
+            child.setEnabled(true);
+        }
     }
 }

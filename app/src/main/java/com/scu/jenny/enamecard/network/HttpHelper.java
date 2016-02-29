@@ -98,8 +98,8 @@ public class HttpHelper {
 
         connection.setUseCaches(false);
         connection.setAllowUserInteraction(false);
-        connection.setConnectTimeout(TIME_OUT);
-        connection.setReadTimeout(TIME_OUT);
+//        connection.setConnectTimeout(TIME_OUT);
+//        connection.setReadTimeout(TIME_OUT);
     }
 
 

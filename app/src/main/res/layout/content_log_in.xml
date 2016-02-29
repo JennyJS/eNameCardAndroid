@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/login_view_layout"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.scu.jenny.enamecard.LogInActivity"
     tools:showIn="@layout/activity_log_in"
@@ -43,7 +44,7 @@
             android:id="@+id/phone_number_edit_text"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="37dp"
-            android:gravity="center" />
+            android:gravity="center_horizontal" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -85,7 +86,7 @@
             android:ems="10"
             android:id="@+id/verfication_code_edit_text"
             android:layout_marginBottom="37dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_horizontal"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
