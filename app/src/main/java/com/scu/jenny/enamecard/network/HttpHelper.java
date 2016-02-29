@@ -1,5 +1,7 @@
 package com.scu.jenny.enamecard.network;
 
+import com.scu.jenny.enamecard.storage.KVStore;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -23,23 +25,20 @@ public class HttpHelper {
     private static final int TIME_OUT = 5000;
 
     public static String sendGet(String path) {
-        HttpURLConnection c = null;
+        HttpURLConnection connection = null;
         try {
             URL u = new URL(domain + path);
-            c = (HttpURLConnection) u.openConnection();
-            c.setRequestMethod("GET");
-            c.setRequestProperty("Content-length", "0");
-            c.setUseCaches(false);
-            c.setAllowUserInteraction(false);
-            c.setConnectTimeout(TIME_OUT);
-            c.setReadTimeout(TIME_OUT);
-            c.connect();
-            int status = c.getResponseCode();
+            connection = (HttpURLConnection) u.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-length", "0");
+            commenInitConnection(connection);
+            connection.connect();
+            int status = connection.getResponseCode();
 
             switch (status) {
                 case 200:
                 case 201:
-                    BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     StringBuilder sb = new StringBuilder();
                     String line;
                     while ((line = br.readLine()) != null) {
@@ -47,6 +46,8 @@ public class HttpHelper {
                     }
                     br.close();
                     return sb.toString();
+                default:
+                    return "{\"status\":\"failure\"}";
             }
 
         } catch (MalformedURLException ex) {
@@ -54,9 +55,9 @@ public class HttpHelper {
         } catch (IOException ex) {
             Logger.getLogger(HttpHelper.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            if (c != null) {
+            if (connection != null) {
                 try {
-                    c.disconnect();
+                    connection.disconnect();
                 } catch (Exception ex) {
                     Logger.getLogger(HttpHelper.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -67,25 +68,38 @@ public class HttpHelper {
 
     public static String sendPost(String path, String jsonString) throws IOException {
         URL url;
-        URLConnection urlConn;
+        URLConnection connection;
         DataOutputStream printout;
         DataInputStream input;
         url = new URL (domain + path);
-        urlConn = url.openConnection();
-        urlConn.setDoInput(true);
-        urlConn.setDoOutput(true);
-        urlConn.setUseCaches(false);
-        urlConn.setConnectTimeout(TIME_OUT);
-        urlConn.setReadTimeout(TIME_OUT);
-        urlConn.setRequestProperty("Content-Type", "application/json");
-        urlConn.connect();
+        connection = url.openConnection();
 
-        printout = new DataOutputStream(urlConn.getOutputStream());
+        commenInitConnection(connection);
+
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.connect();
+
+        printout = new DataOutputStream(connection.getOutputStream());
         printout.write(jsonString.getBytes("UTF-8"));
         printout.flush();
         printout.close();
 
-        return parseResponse((HttpURLConnection)urlConn);
+        return parseResponse((HttpURLConnection)connection);
+    }
+
+    private static void commenInitConnection(URLConnection connection) {
+
+        if (KVStore.getInstance().get("secret", "").length() > 0) {
+            connection.setRequestProperty("secret", KVStore.getInstance().get("secret", ""));
+        }
+
+        connection.setUseCaches(false);
+        connection.setAllowUserInteraction(false);
+        connection.setConnectTimeout(TIME_OUT);
+        connection.setReadTimeout(TIME_OUT);
     }
 
 

@@ -38,16 +38,20 @@ public class NetworkAsyncTask extends AsyncTask<String, Integer, Double> {
     @Override
     protected Double doInBackground(String... params) {
         String httpMethod = params[0];
-
+        String response = null;
         try {
             switch (httpMethod) {
                 case "GET":
-                    HttpHelper.sendGet(params[1]);
+                    response = HttpHelper.sendGet(params[1]);
+                    break;
                 case "POST":
-                    String response = HttpHelper.sendPost(params[1], params[2]);
-                    this.callback.process(response);
+                    response = HttpHelper.sendPost(params[1], params[2]);
+                    break;
                 case "PUT":
                 case "DELETE":
+            }
+            if (response != null) {
+                this.callback.process(response);
             }
         } catch (IOException e) {
             e.printStackTrace();

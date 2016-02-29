@@ -1,5 +1,7 @@
 package com.scu.jenny.enamecard;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LogInActivity extends AppCompatActivity {
+    private static Activity thisActivity;
+
     Button logInBtn;
     Button getVerificationCodeBtn;
     private static String sessionId;
@@ -31,6 +35,7 @@ public class LogInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        thisActivity = this;
         KVStore.init(this);
 
         setContentView(R.layout.activity_log_in);
@@ -81,8 +86,12 @@ public class LogInActivity extends AppCompatActivity {
                         if (object.has("secret")){
                             String secret = object.getString("secret");
                             KVStore.getInstance().set("secret", secret);
-                            Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
-                            startActivity(intent);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new NetworkAsyncTask(thisActivity, "Getting user profile...", new FetchUserProfileCallback()).execute("GET", "/user?PhoneNumber=" + phoneNumberEditText.getText());
+                                }
+                            });
                         } else {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -100,7 +109,29 @@ public class LogInActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+    private class FetchUserProfileCallback implements ProcessResponse {
+
+        @Override
+        public void process(String jsonRespose) {
+            try {
+                JSONObject object = new JSONObject(jsonRespose);
+                if (object.has("first_name")) {
+                    Intent intent = new Intent(thisActivity, MainPageActivity.class);
+                    startActivity(intent);
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "User doesn't have first name", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void requestVerificationCode() {
@@ -126,6 +157,7 @@ public class LogInActivity extends AppCompatActivity {
                             });
                         }
                     } catch (JSONException e) {
+                        System.out.print(jsonRespose);
                         e.printStackTrace();
                     }
                 }

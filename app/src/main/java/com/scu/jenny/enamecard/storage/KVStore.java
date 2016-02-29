@@ -26,6 +26,7 @@ public class KVStore {
 
     public void set(String key, String value){
         sharedPrefs.edit().putString(key, value);
+        sharedPrefs.edit().commit();
     }
 
     public String get(String key, String dft){
