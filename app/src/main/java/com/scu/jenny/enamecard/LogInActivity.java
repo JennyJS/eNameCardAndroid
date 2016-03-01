@@ -25,6 +25,8 @@ public class LogInActivity extends AppCompatActivity {
 
     Button logInBtn;
     Button getVerificationCodeBtn;
+    Button backBtn;
+
     private static String sessionId;
     EditText phoneNumberEditText;
     EditText verificationCodeEditText;
@@ -45,6 +47,7 @@ public class LogInActivity extends AppCompatActivity {
 
         logInBtn = (Button) findViewById(R.id.btn_enter_logIn);
         getVerificationCodeBtn = (Button) findViewById(R.id.button);
+        backBtn = (Button) findViewById(R.id.back_btn);
         phoneNumberEditText = (EditText) findViewById(R.id.phone_number_edit_text);
         verificationCodeEditText = (EditText) findViewById(R.id.verfication_code_edit_text);
 
@@ -73,6 +76,12 @@ public class LogInActivity extends AppCompatActivity {
                 } else {
                     requestSecret();
                 }
+            }
+        });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveViewDown(700);
             }
         });
     }
@@ -124,6 +133,7 @@ public class LogInActivity extends AppCompatActivity {
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);
                 } else {
+                    // TODO: jump to enter first name UI
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -241,32 +251,11 @@ public class LogInActivity extends AppCompatActivity {
 
     private void enablePhoneNumberInput() {
         phoneNumberLayout.setAlpha(1.0f);
-
-        for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
-            View child = verificationCodeLayout.getChildAt(i);
-            child.setEnabled(true);
-        }
-
         verificationCodeLayout.setAlpha(0f);
-
-        for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
-            View child = verificationCodeLayout.getChildAt(i);
-            child.setEnabled(false);
-        }
     }
 
     private void enableVerificationInput() {
         phoneNumberLayout.setAlpha(0f);
-        for (int i = 0; i < phoneNumberLayout.getChildCount(); i++) {
-            View child = phoneNumberLayout.getChildAt(i);
-            child.setEnabled(false);
-        }
-
         verificationCodeLayout.setAlpha(1.0f);
-
-        for (int i = 0; i < verificationCodeLayout.getChildCount(); i++) {
-            View child = verificationCodeLayout.getChildAt(i);
-            child.setEnabled(true);
-        }
     }
 }

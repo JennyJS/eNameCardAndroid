@@ -98,5 +98,16 @@
             android:background="@drawable/mybutton"
             android:layout_marginBottom="32dp"
             />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Re-enter Phone Number"
+            android:textColor="@color/archerGray"
+            android:id="@+id/back_btn"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:textAllCaps="false"
+            />
     </LinearLayout>
 </LinearLayout>
