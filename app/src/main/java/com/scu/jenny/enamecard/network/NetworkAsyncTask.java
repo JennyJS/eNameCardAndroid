@@ -48,6 +48,7 @@ public class NetworkAsyncTask extends AsyncTask<String, Integer, Double> {
                     response = HttpHelper.sendPost(params[1], params[2]);
                     break;
                 case "PUT":
+                    respone = HttpHelper.sendP
                 case "DELETE":
             }
             if (response != null) {

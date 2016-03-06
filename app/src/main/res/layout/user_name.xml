@@ -7,25 +7,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="50dp">
         <EditText
             android:layout_width="372dp"
             android:layout_height="wrap_content"
             android:hint="First name"
             android:ellipsize="start"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:id="@+id/edit_firtName"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Last name"
             android:ellipsize="start"
-            android:gravity="center_horizontal"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email address"
-            android:ellipsize="start"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:paddingTop="30dp"
+            android:id="@+id/edit_lastName"/>
 
     </LinearLayout>
 
@@ -34,50 +31,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="20dp"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:paddingTop="30dp">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/icon_smile"
-            android:layout_gravity="center_horizontal"/>
-
-        <LinearLayout
-            android:layout_width="383dp"
-            android:layout_height="69dp"
-            android:weightSum="2">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select a photo"
-                android:layout_weight="1"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Take a photo"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_weight="0.01"
-            android:orientation="vertical">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Upload"
-                android:layout_gravity="center_horizontal" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Enter"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/mybutton"
-                android:textColor="@android:color/white"
-                />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:text="Enter"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/mybutton"
+            android:textColor="@android:color/white"
+            android:layout_weight="0.05"
+            android:id="@+id/btn_user_name"/>
 
     </LinearLayout>
 

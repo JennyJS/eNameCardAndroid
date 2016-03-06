@@ -129,6 +129,11 @@ public class LogInActivity extends AppCompatActivity {
         public void process(String jsonRespose) {
             try {
                 JSONObject object = new JSONObject(jsonRespose);
+
+//                // for demo purpose
+//                Intent intent = new Intent(thisActivity, MainPageActivity.class);
+//                startActivity(intent);
+
                 if (object.has("first_name")) {
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);

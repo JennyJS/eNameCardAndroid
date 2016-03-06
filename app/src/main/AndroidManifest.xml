@@ -30,7 +30,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".QRActivity" />
         <activity android:name=".ScanActivity" />
-        <activity android:name=".NameCardsActivity"></activity>
+        <activity android:name=".NameCardsActivity" />
+        <activity android:name=".UserNameActivity"></activity>
     </application>
 
 </manifest>

@@ -78,7 +78,6 @@ public class HttpHelper {
 
         connection.setDoInput(true);
         connection.setDoOutput(true);
-
         connection.setRequestProperty("Content-Type", "application/json");
         connection.connect();
 
@@ -87,8 +86,12 @@ public class HttpHelper {
         printout.flush();
         printout.close();
 
-        return parseResponse((HttpURLConnection)connection);
+        HttpURLConnection httpURLConnection = (HttpURLConnection)connection;
+        httpURLConnection.setRequestMethod("POST");
+        return parseResponse(httpURLConnection);
     }
+
+
 
     private static void commenInitConnection(URLConnection connection) {
 
