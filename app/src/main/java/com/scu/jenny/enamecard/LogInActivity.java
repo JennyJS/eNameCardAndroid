@@ -77,8 +77,8 @@ public class LogInActivity extends AppCompatActivity {
                     // for convenience
                     Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                     startActivity(intent);
-                } else if (sessionId == null || phoneNumberEditText.getText().length() == 0) {
-                    Toast.makeText(getApplicationContext(), "You need to get verification code first", Toast.LENGTH_LONG).show();
+                } else if (sessionId == null) {
+                    Toast.makeText(getApplicationContext(), "Missing session ID (You need to debug)", Toast.LENGTH_LONG).show();
                 } else {
                     requestSecret();
                 }
@@ -108,7 +108,8 @@ public class LogInActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    new NetworkAsyncTask(thisActivity, "Getting user profile...", new FetchUserProfileCallback()).execute("GET", "/user?PhoneNumber=" + phoneNumberEditText.getText());
+                                    new NetworkAsyncTask(thisActivity, "Getting user profile...", new FetchUserProfileCallback()).execute("GET", "/user?PhoneNumber=" +
+                                            (phoneNumberEditText.getText().toString().length() == 0 ? "4087053056" : phoneNumberEditText.getText()));
                                 }
                             });
                         } else {
@@ -159,7 +160,7 @@ public class LogInActivity extends AppCompatActivity {
     private void requestVerificationCode() {
         final JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("phone_number", phoneNumberEditText.getText());
+            jsonObject.put("phone_number", phoneNumberEditText.getText().length() == 0 ? "4087053056" : phoneNumberEditText.getText());
 
             new NetworkAsyncTask(this, "Getting SMS code...", new ProcessResponse() {
                 @Override
