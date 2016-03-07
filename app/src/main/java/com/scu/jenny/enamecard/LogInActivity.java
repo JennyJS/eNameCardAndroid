@@ -136,7 +136,7 @@ public class LogInActivity extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(jsonRespose);
 
-                if (object.has("first_name")) {
+                if (object.has("firstName")) {
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);
                 } else {
