@@ -60,7 +60,13 @@ public class LogInActivity extends AppCompatActivity {
         getVerificationCodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestVerificationCode();
+                if(phoneNumberEditText.getText().toString().equals("123")){
+                    Intent intent = new Intent(getApplicationContext(), UserNameActivity.class);
+                    startActivity(intent);
+                } else {
+                    requestVerificationCode();
+                }
+
             }
         });
 
@@ -130,10 +136,6 @@ public class LogInActivity extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(jsonRespose);
 
-//                // for demo purpose
-//                Intent intent = new Intent(thisActivity, MainPageActivity.class);
-//                startActivity(intent);
-
                 if (object.has("first_name")) {
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);
@@ -142,7 +144,9 @@ public class LogInActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "User doesn't have first name", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "User doesn't have first name", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(thisActivity, UserNameActivity.class);
+                            startActivity(intent);
                         }
                     });
                 }

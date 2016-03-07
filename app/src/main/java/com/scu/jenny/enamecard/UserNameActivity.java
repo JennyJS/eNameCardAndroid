@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
+import com.scu.jenny.enamecard.network.ProcessResponse;
+import com.scu.jenny.enamecard.storage.KVStore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +28,7 @@ public class UserNameActivity extends AppCompatActivity {
         enterUserNameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveUserNameToServer();
 
             }
         });
@@ -35,9 +38,20 @@ public class UserNameActivity extends AppCompatActivity {
     private void saveUserNameToServer(){
         final JSONObject jsonObjectject = new JSONObject();
         try {
-            jsonObjectject.put("first_name",editTextFirst.getText());
-            jsonObjectject.put("last_name", editTextLast.getText());
-            new NetworkAsyncTask(this, "")
+            jsonObjectject.put("firstName",editTextFirst.getText());
+            jsonObjectject.put("lastName", editTextLast.getText());
+            new NetworkAsyncTask(this, "Updating user info..", new ProcessResponse() {
+                @Override
+                public void process(String jsonRespose) {
+                    System.out.println("!!!!!!!!!!!" + jsonRespose);
+//                    try{
+////                        JSONObject object = new JSONObject(jsonRespose);
+//                        System.out.println("!!!!!!!!!!!" + jsonRespose);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+                }
+            }).execute("PUT", "/user", jsonObjectject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

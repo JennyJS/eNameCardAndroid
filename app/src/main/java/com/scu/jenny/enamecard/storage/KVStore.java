@@ -13,7 +13,7 @@ public class KVStore {
 
     private KVStore(Context context) {
         this.context = context;
-        sharedPrefs = context.getSharedPreferences("secret", 0);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     private static KVStore singleton;
@@ -25,8 +25,9 @@ public class KVStore {
     public static KVStore getInstance(){return singleton;}
 
     public void set(String key, String value){
-        sharedPrefs.edit().putString(key, value);
-        sharedPrefs.edit().commit();
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString(key, value);
+        editor.commit();
     }
 
     public String get(String key, String dft){
