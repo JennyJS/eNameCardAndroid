@@ -41,7 +41,6 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         thisActivity = this;
-        KVStore.init(this);
 
         setContentView(R.layout.activity_log_in);
 
@@ -108,8 +107,7 @@ public class LogInActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    new NetworkAsyncTask(thisActivity, "Getting user profile...", new FetchUserProfileCallback()).execute("GET", "/user?PhoneNumber=" +
-                                            (phoneNumberEditText.getText().toString().length() == 0 ? "4087053056" : phoneNumberEditText.getText()));
+                                    new NetworkAsyncTask(thisActivity, "Getting user profile...", new FetchUserProfileCallback()).execute("GET", "/user");
                                 }
                             });
                         } else {

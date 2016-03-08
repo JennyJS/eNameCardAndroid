@@ -5,15 +5,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainPageActivity extends TabActivity  {
-
+    public static final String userInfoKey = "USER_INFO";
     private TabHost tabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+        JSONObject userObj = null;
+        try {
+            userObj = new JSONObject(getIntent().getExtras().getString(userInfoKey));
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Error getting user info", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+
 
         // create the TabHost that will contain the Tabs
         final TabHost tabHost = (TabHost)findViewById(android.R.id.tabhost);
