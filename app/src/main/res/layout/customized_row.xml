@@ -26,6 +26,8 @@
         android:layout_gravity="center_vertical"
         android:contentDescription="Add"
         android:src="@drawable/icon_add"
-        android:layout_marginLeft="230dp"/>
+        android:layout_marginLeft="230dp"
+        android:clickable="true"
+        />
 
 </LinearLayout>

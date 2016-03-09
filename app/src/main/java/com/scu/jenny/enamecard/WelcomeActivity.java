@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.storage.KVStore;
@@ -48,5 +49,19 @@ public class WelcomeActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
             startActivity(intent);
         }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
     }
 }

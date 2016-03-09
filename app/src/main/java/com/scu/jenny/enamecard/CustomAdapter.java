@@ -42,6 +42,8 @@ public class CustomAdapter extends ArrayAdapter{
             inputStream = getContext().getAssets().open(connections.getAddIcon());
             drawable = Drawable.createFromStream(inputStream, null);
             imageView2.setImageDrawable(drawable);
+            imageView2.setOnClickListener(connections.getListener());
+
 
         } catch (IOException e) {
             e.printStackTrace();
