@@ -45,9 +45,9 @@ public class MyProfileActivity extends AppCompatActivity {
         myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
     }
 
-    private boolean isFBLinked() {
-
-    }
+//    private boolean isFBLinked() {
+//
+//    }
 
     private void onFblogin() {
         fbCallbackmanager = CallbackManager.Factory.create();
@@ -84,7 +84,7 @@ public class MyProfileActivity extends AppCompatActivity {
                                                 System.out.println("str_lastname" + str_lastname);
 
                                                 // Store ID somewhere
-                                                
+
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
