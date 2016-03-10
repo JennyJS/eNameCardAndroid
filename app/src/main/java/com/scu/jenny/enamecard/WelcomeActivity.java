@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.facebook.appevents.AppEventsLogger;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
+import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.KVStore;
 
 import org.json.JSONException;
@@ -15,7 +16,6 @@ import org.json.JSONObject;
 
 public class WelcomeActivity extends AppCompatActivity {
     static private Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +46,10 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }).execute("GET", "/user");
         } else {
+            //TODO purge DB
+            DBHelper.init(context);
+            DBHelper dbHelper = DBHelper.getInstance();
+            context.deleteDatabase(dbHelper.getDatabaseName());
             Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
             startActivity(intent);
         }
@@ -64,4 +68,5 @@ public class WelcomeActivity extends AppCompatActivity {
         // Logs 'app deactivate' App Event.
         AppEventsLogger.deactivateApp(this);
     }
+
 }

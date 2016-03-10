@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
+import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.KVStore;
 
 import org.json.JSONException;
@@ -43,7 +44,9 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         thisActivity = this;
-
+        // TODO purge DB delte all tables
+        DBHelper dbHelper = DBHelper.getInstance();
+        getApplicationContext().deleteDatabase(dbHelper.getDatabaseName());
         setContentView(R.layout.activity_log_in);
 
         logInBtn = (Button) findViewById(R.id.btn_enter_logIn);
@@ -138,6 +141,7 @@ public class LogInActivity extends AppCompatActivity {
                 JSONObject object = new JSONObject(jsonRespose);
 
                 if (object.has("firstName")) {
+                    //TODO write to DB
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);
                 } else {

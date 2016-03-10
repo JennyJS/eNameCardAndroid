@@ -10,7 +10,9 @@ import android.widget.Toast;
 
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
+import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.KVStore;
+import com.scu.jenny.enamecard.storage.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +52,14 @@ public class UserNameActivity extends AppCompatActivity {
                     try{
                         JSONObject object = new JSONObject(jsonRespose);
                         if (object.has("firstName")){
+                            // TODO write to DB
+                            DBHelper dbHelper = DBHelper.getInstance();
+                            User user = new User();
+                            user.firstName = object.getString("firtName");
+                            user.lastName = object.getString("lastName");
+                            user.phoneNumber = object.getString("phoneNumber");
+
+                            dbHelper.createUserRecord(user);
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             startActivity(intent);
                         } else {
