@@ -17,6 +17,14 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.Facebook;
+//import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,9 +33,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
+
 public class MyProfileActivity extends AppCompatActivity {
     private ListView myListView;
     public static CallbackManager fbCallbackmanager;
+    private static TwitterAuthClient twitterAuthClient;
+    private LoginType loginType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +50,17 @@ public class MyProfileActivity extends AppCompatActivity {
         final List<Connections> connectionList = new ArrayList<>();
 
         connectionList.add(new Connections("icon_qora.png", "icon_add.png", null));
-        connectionList.add(new Connections("icon_twitter.png", "icon_add.png", null));
-        if (isLoggedIn()){
+
+        // Twitter
+        connectionList.add(new Connections("icon_twitter.png", "icon_add.png", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                twitterLogin();
+            }
+        }));
+
+        // Facebook
+        if (isFBLoggedIn()){
             connectionList.add(new Connections("icon_facebook.png", "connected.jpg", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -63,66 +84,113 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        fbCallbackmanager.onActivityResult(requestCode, resultCode, data);
+        if (this.loginType != null) {
+            switch (this.loginType) {
+                case FACEBOOK:
+                    fbCallbackmanager.onActivityResult(requestCode, resultCode, data);
+                    break;
+                case TWITTER:
+                    twitterAuthClient.onActivityResult(requestCode, resultCode, data);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
-    public boolean isLoggedIn() {
+    public boolean isFBLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
     }
 
-    private void onFblogin() {
-        fbCallbackmanager = CallbackManager.Factory.create();
+//    private boolean isTwitterLoggedIn() {
+//        TwitterSession session = Twitter.getSessionManager().getActiveSession();
+//        TwitterAuthToken authToken = session.getAuthToken();
+//        String token = authToken.token;
+//        String secret = authToken.secret;
+//        return secret != null;
+//    }
+    public enum LoginType {
+        FACEBOOK,
+        TWITTER,
+        LINKEDIN
+    }
 
+    private void twitterLogin() {
+        this.loginType = LoginType.TWITTER;
+        final TwitterAuthConfig authConfig = new TwitterAuthConfig("jXx0mVmLepyR6M7OC8fDmyePL", "4br7HIvYi3oQUCjXsHBswLtIyPfUlTtLf3muP4jszeNXhAy4Gr");
+        Fabric.with(this, new Twitter(authConfig));
+        twitterAuthClient = new TwitterAuthClient();
+        twitterAuthClient.authorize(this, new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> twitterSessionResult) {
+                Log.i("Twitter", "success");
+                System.out.println("@@@@@@@@@@@ TwitterID: " + twitterSessionResult.data.getUserId() + twitterSessionResult.data.getUserName());
+
+            }
+
+            @Override
+            public void failure(TwitterException e) {
+                Log.e("Twitter", "failed");
+            }
+        });
+
+//        Twitter.logIn(MyProfileActivity.this, );
+    }
+
+    private void onFblogin() {
+        this.loginType = LoginType.FACEBOOK;
+        fbCallbackmanager = CallbackManager.Factory.create();
         // Set permissions
         LoginManager.getInstance().logOut();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        LoginManager.getInstance().registerCallback(fbCallbackmanager, new FBCallBack());
+    }
 
-        LoginManager.getInstance().registerCallback(fbCallbackmanager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        System.out.println("Success");
-                        GraphRequest.newMeRequest(
-                                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                                    @Override
-                                    public void onCompleted(JSONObject json, GraphResponse response) {
-                                        if (response.getError() != null) {
-                                            // handle error
-                                            System.out.println("@@@@@@@@@@@@@@@@@@ERROR");
-                                        } else {
-                                            System.out.println("!!!!!!!!!!!!!!!!!Success");
-                                            try {
 
-                                                String jsonresult = String.valueOf(json);
-                                                System.out.println("JSON Result" + jsonresult);
-                                                String str_id = json.getString("id");
-                                                String imageURL = "https://graph.facebook.com/" + str_id + "/picture?type=large";
-                                                // Store ID to DB
-                                                DBHelper.init(getApplicationContext());
-                                                DBHelper db = DBHelper.getInstance();
-                                                Facebook fb = new Facebook(str_id, imageURL);
-                                                db.createFBRecord(fb);
+    class FBCallBack implements FacebookCallback<LoginResult> {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            System.out.println("Success");
+            GraphRequest.newMeRequest(
+                    loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject json, GraphResponse response) {
+                            if (response.getError() != null) {
+                                // handle error
+                                System.out.println("@@@@@@@@@@@@@@@@@@ERROR");
+                            } else {
+                                System.out.println("!!!!!!!!!!!!!!!!!Success");
+                                try {
 
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
+                                    String jsonresult = String.valueOf(json);
+                                    System.out.println("JSON Result" + jsonresult);
+                                    String str_id = json.getString("id");
+                                    String imageURL = "https://graph.facebook.com/" + str_id + "/picture?type=large";
+                                    // Store ID to DB
+                                    DBHelper.init(getApplicationContext());
+                                    DBHelper db = DBHelper.getInstance();
+                                    Facebook fb = new Facebook(str_id, imageURL);
+                                    db.createFBRecord(fb);
 
-                                }).executeAsync();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
 
-                    }
+                    }).executeAsync();
 
-                    @Override
-                    public void onCancel() {
-                        Log.d("Cancel", "On cancel");
-                    }
+        }
 
-                    @Override
-                    public void onError(FacebookException error) {
-                        Log.d("Error", error.toString());
-                    }
-                });
+        @Override
+        public void onCancel() {
+            Log.d("Cancel", "On cancel");
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            Log.d("Error", error.toString());
+        }
     }
 }

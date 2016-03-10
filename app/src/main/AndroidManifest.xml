@@ -19,8 +19,9 @@
             android:name=".LogInActivity"
             android:label="@string/title_activity_log_in"
             android:theme="@style/AppTheme.NoActionBar">
-  -->
         </activity>
+        <activity android:name=".thirdparty.TwitterActivity" />
+        <activity android:name=".thirdparty.TwitterInit" />
         <activity
             android:name=".MainPageActivity"
             android:label="@string/title_activity_main_page"
