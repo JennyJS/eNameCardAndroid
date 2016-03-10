@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2f160620708ff1ba8a44940d7808bec5d334c9b6" />
         <activity
             android:name=".LogInActivity"
             android:label="@string/title_activity_log_in"
