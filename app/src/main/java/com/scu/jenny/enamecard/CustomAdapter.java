@@ -46,7 +46,7 @@ public class CustomAdapter extends ArrayAdapter{
                 drawable = Drawable.createFromStream(inputStream, null);
                 imageView2.setImageDrawable(drawable);
             } else {
-                DrawableManager.getInstance().fetchDrawableOnThread("url", imageView2);
+                DrawableManager.getInstance().fetchDrawableOnThread(connection.getUrl(), imageView2);
             }
 
             imageView2.setOnClickListener(connection.getListener());

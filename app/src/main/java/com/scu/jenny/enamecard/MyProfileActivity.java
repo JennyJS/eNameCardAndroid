@@ -100,6 +100,7 @@ public class MyProfileActivity extends AppCompatActivity {
         if (isFBLoggedIn()) {
             // get FB URL from DB
             Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0));
+            System.out.println(fb);
             connectionList.add(new Connections("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -138,8 +139,8 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     public boolean isFBLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        return accessToken != null && DBHelper.getInstance().getFBByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0)) != null;
+//        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return DBHelper.getInstance().getFBByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0)) != null;
     }
 //
 //    private boolean isTwitterLoggedIn() {

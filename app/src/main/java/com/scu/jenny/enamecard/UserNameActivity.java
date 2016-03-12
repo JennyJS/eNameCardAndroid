@@ -55,7 +55,7 @@ public class UserNameActivity extends AppCompatActivity {
                             // TODO write to DB
                             DBHelper dbHelper = DBHelper.getInstance();
                             User user = new User(object.getString("firtName"), object.getString("lastName"), object.getString("phoneNumber"));
-                            long userPK = DBHelper.getInstance().createUserRecord(user);
+                            long userPK = DBHelper.getInstance().updateOrCreateUserRecord(user);
                             KVStore.getInstance().set("userPK", userPK);
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             startActivity(intent);

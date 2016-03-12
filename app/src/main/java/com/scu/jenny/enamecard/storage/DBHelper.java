@@ -99,6 +99,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
+        if (cursor.getCount() == 0) {
+            return null;
+        }
         cursor.moveToFirst();
         User user = new User(cursor.getString(0), cursor.getString(1), cursor.getString(2));
         return user;
@@ -116,23 +119,30 @@ public class DBHelper extends SQLiteOpenHelper{
                 null
                 );
         if (cursor.getCount() == 0) {
+            System.out.println("Not getting FB " + userPK);
             return null;
         }
+        System.out.println("Getting FB");
         cursor.moveToFirst();
-        return new Facebook(cursor.getLong(0), cursor.getString(1), cursor.getColumnName(2));
+        return new Facebook(cursor.getLong(0), cursor.getString(1), cursor.getString(2));
     }
 
-    public long createUserRecord(User user) {
+    public long updateOrCreateUserRecord(User user) {
+        // Find if user record exists first
+        User old = getUserByPhoneNumber(user.phoneNumber);
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(PHONE_NUMBER, user.phoneNumber);
         values.put(FIRST_NAME, user.firstName );
         values.put(LAST_NAME, user.lastName);
+        long row_id;
 
-        // insert row
-        long row_id = db.insert(TABLE_BASIC, null, values);
-
+        if (old == null) {
+            row_id = db.insert(TABLE_BASIC, null, values);
+        } else {
+            row_id = db.update(TABLE_BASIC, values, null, null);
+        }
         return row_id;
     }
 
