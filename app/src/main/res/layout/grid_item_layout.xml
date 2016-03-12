@@ -1,20 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:background="@color/archerGray"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:background="@drawable/layout_shape"
+    >
 
     <ImageView
         android:id="@+id/socialMediaIV"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        />
 
     <ImageView
         android:id="@+id/linkedIV"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        />
 
     <TextView
         android:id="@+id/text"
