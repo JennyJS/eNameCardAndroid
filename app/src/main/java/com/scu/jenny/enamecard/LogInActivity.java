@@ -144,8 +144,8 @@ public class LogInActivity extends AppCompatActivity {
                 if (object.has("firstName")) {
                     //TODO write to DB
                     User user = new User(object.getString("firstName"), object.getString("lastName"), object.getString("phoneNumber"));
-                    long userPK = DBHelper.getInstance().updateOrCreateUserRecord(user);
-                    KVStore.getInstance().set("userPK", userPK);
+                    DBHelper.getInstance().updateOrCreateUserRecord(user);
+
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);
                 } else {

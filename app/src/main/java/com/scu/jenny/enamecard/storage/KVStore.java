@@ -8,13 +8,11 @@ import android.preference.PreferenceManager;
  * Created by jenny on 2/28/16.
  */
 public class KVStore {
-    private final Context context;
     private final SharedPreferences sharedPrefs;
 
     public static final String USER_PRIMARY_KEY = "userPK";
 
     private KVStore(Context context) {
-        this.context = context;
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -43,4 +41,13 @@ public class KVStore {
     }
 
     public Long get(String key, long dft) { return sharedPrefs.getLong(key, dft);}
+
+    /********* Helper **********/
+    public static long getCurrentUserPK() {
+        return singleton.get(USER_PRIMARY_KEY, 0);
+    }
+
+    public static void setCurrentUserPK(long userPK) {
+        singleton.set(USER_PRIMARY_KEY, userPK);
+    }
 }

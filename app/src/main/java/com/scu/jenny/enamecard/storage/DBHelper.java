@@ -79,6 +79,9 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public static DBHelper getInstance(){
+        if (dbHelper == null) {
+            throw new IllegalStateException("DB hasn't been init");
+        }
         return dbHelper;
     }
 
@@ -104,6 +107,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
         cursor.moveToFirst();
         User user = new User(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+        db.close();
         return user;
     }
 
@@ -143,6 +147,9 @@ public class DBHelper extends SQLiteOpenHelper{
         } else {
             row_id = db.update(TABLE_BASIC, values, null, null);
         }
+
+        KVStore.setCurrentUserPK(row_id);
+        db.close();
         return row_id;
     }
 

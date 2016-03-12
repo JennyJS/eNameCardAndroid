@@ -47,16 +47,12 @@ public class UserNameActivity extends AppCompatActivity {
             new NetworkAsyncTask(this, "Updating user info..", new ProcessResponse() {
                 @Override
                 public void process(String jsonRespose) {
-                    System.out.println("!!!!!!!!!!!" + jsonRespose);
-
                     try{
                         JSONObject object = new JSONObject(jsonRespose);
                         if (object.has("firstName")){
-                            // TODO write to DB
-                            DBHelper dbHelper = DBHelper.getInstance();
                             User user = new User(object.getString("firtName"), object.getString("lastName"), object.getString("phoneNumber"));
-                            long userPK = DBHelper.getInstance().updateOrCreateUserRecord(user);
-                            KVStore.getInstance().set("userPK", userPK);
+                            DBHelper.getInstance().updateOrCreateUserRecord(user);
+
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             startActivity(intent);
                         } else {
@@ -71,6 +67,4 @@ public class UserNameActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
 }

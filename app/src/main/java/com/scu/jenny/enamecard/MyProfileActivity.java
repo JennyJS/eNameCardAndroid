@@ -99,7 +99,7 @@ public class MyProfileActivity extends AppCompatActivity {
         // Facebook
         if (isFBLoggedIn()) {
             // get FB URL from DB
-            Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0));
+            Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK());
             System.out.println(fb);
             connectionList.add(new Connections("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
                 @Override
@@ -140,7 +140,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
     public boolean isFBLoggedIn() {
 //        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        return DBHelper.getInstance().getFBByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0)) != null;
+        return DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK()) != null;
     }
 //
 //    private boolean isTwitterLoggedIn() {
@@ -197,7 +197,7 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //delete facebook record
-                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0));
+                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
             }
         });
 
@@ -234,7 +234,7 @@ public class MyProfileActivity extends AppCompatActivity {
                                     String imageURL = "https://graph.facebook.com/" + fbID + "/picture?type=large";
                                     // Store ID to DB
                                     DBHelper db = DBHelper.getInstance();
-                                    Facebook fb = new Facebook(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0), fbID, imageURL);
+                                    Facebook fb = new Facebook(KVStore.getCurrentUserPK(), fbID, imageURL);
                                     db.createFBRecord(fb);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
