@@ -65,7 +65,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // participate in layout passes, etc.)
         splash.animate()
                 .alpha(0f)
-                .setDuration(6000)
+                .setDuration(3000)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {

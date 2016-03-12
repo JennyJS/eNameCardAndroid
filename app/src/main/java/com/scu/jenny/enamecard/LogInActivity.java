@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class LogInActivity extends AppCompatActivity {
         logInBtn = (Button) findViewById(R.id.btn_enter_logIn);
         getVerificationCodeBtn = (Button) findViewById(R.id.button);
         backBtn = (Button) findViewById(R.id.back_btn);
+
+
         phoneNumberEditText = (EditText) findViewById(R.id.phone_number_edit_text);
         verificationCodeEditText = (EditText) findViewById(R.id.verfication_code_edit_text);
 
@@ -64,7 +67,7 @@ public class LogInActivity extends AppCompatActivity {
         getVerificationCodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(phoneNumberEditText.getText().toString().equals("123")){
+                if (phoneNumberEditText.getText().toString().equals("123")) {
                     Intent intent = new Intent(getApplicationContext(), UserNameActivity.class);
                     startActivity(intent);
                 } else {
