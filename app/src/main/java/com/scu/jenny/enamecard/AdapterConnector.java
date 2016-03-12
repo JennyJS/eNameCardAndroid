@@ -5,11 +5,11 @@ import android.view.View;
 /**
  * Created by jenny on 2/21/16.
  */
-public class Connections {
+public class AdapterConnector {
     private String iconName;
     private String url;
     private View.OnClickListener listener;
-    public Connections(String iconName, String url, View.OnClickListener listener){
+    public AdapterConnector(String iconName, String url, View.OnClickListener listener){
         this.iconName = iconName;
         this.url = url;
         this.listener = listener;

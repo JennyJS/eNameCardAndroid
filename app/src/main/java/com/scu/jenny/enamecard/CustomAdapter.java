@@ -18,18 +18,18 @@ import java.util.List;
  * Created by jenny on 2/21/16.
  */
 public class CustomAdapter extends ArrayAdapter{
-    final private List<Connections> connectionsList;
+    final private List<AdapterConnector> adapterConnectorList;
 
 
-    public CustomAdapter(Context context, int resource, List<Connections> connectionsList){
-        super(context, resource, connectionsList);
-        this.connectionsList = connectionsList;
+    public CustomAdapter(Context context, int resource, List<AdapterConnector> adapterConnectorList){
+        super(context, resource, adapterConnectorList);
+        this.adapterConnectorList = adapterConnectorList;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 
-        final Connections connection = connectionsList.get(position);
+        final AdapterConnector connection = adapterConnectorList.get(position);
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View row = inflater.inflate(R.layout.customized_row, null);
 

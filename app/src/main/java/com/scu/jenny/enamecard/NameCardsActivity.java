@@ -15,11 +15,11 @@ public class NameCardsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_name_cards);
 
 //        myListView = (ListView)findViewById(R.id.list_view);
-//        final List<Connections> connectionList = new ArrayList<>();
-//        connectionList.add(new Connections("icon_qora.png", "icon_add.png"));
-//        connectionList.add(new Connections("icon_twitter.png", "icon_add.png"));
-//        connectionList.add(new Connections("icon_facebook.png", "icon_add.png"));
-//        connectionList.add(new Connections("icon_linkedin.png", "icon_add.png"));
+//        final List<AdapterConnector> connectionList = new ArrayList<>();
+//        connectionList.add(new AdapterConnector("icon_qora.png", "icon_add.png"));
+//        connectionList.add(new AdapterConnector("icon_twitter.png", "icon_add.png"));
+//        connectionList.add(new AdapterConnector("icon_facebook.png", "icon_add.png"));
+//        connectionList.add(new AdapterConnector("icon_linkedin.png", "icon_add.png"));
 //
 //        myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
         contactsListView = (ListView) findViewById(R.id.myCardsListView);

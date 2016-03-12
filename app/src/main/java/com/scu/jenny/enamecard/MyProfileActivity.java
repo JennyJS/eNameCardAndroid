@@ -8,8 +8,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -19,6 +19,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.scu.jenny.enamecard.Profile.GridViewAdapter;
 import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
@@ -51,7 +52,10 @@ public class MyProfileActivity extends AppCompatActivity {
         LINKEDIN
     }
 
-    private ListView myListView;
+//    private ListView myListView;
+    private GridView gridView;
+    private GridViewAdapter gridAdapter;
+
     private LoginType loginType;
     private ImageView logoutBtn;
 
@@ -63,8 +67,8 @@ public class MyProfileActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         logoutBtn = (ImageView) findViewById(R.id.logoutBtn);
-        myListView = (ListView) findViewById(R.id.list_view);
-
+//        myListView = (ListView) findViewById(R.id.list_view);
+        gridView = (GridView) findViewById(R.id.gridView);
 
 
 
@@ -80,14 +84,14 @@ public class MyProfileActivity extends AppCompatActivity {
 
         // Twitter
 //        if(isTwitterLoggedIn()){
-//            connectionList.add(new Connections("icon_twitter.png", "connected.jpg", new View.OnClickListener() {
+//            connectionList.add(new AdapterConnector("icon_twitter.png", "connected.jpg", new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    twitterLogin();
 //                }
 //            }));
 //        } else {
-//            connectionList.add(new Connections("icon_twitter.png", "icon_add.png", new View.OnClickListener() {
+//            connectionList.add(new AdapterConnector("icon_twitter.png", "icon_add.png", new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    twitterLogin();
@@ -95,7 +99,7 @@ public class MyProfileActivity extends AppCompatActivity {
 //            }));
 //
 //        }
-        reloadListView();
+        reloadGridView();
     }
 
     @Override
@@ -115,11 +119,11 @@ public class MyProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void reloadListView() {
-        myListView.invalidateViews();
-        final List<Connections> connectionList = new ArrayList<>();
-        connectionList.add(new Connections("icon_qora.png", null, null));
-        connectionList.add(new Connections("icon_twitter.png", null, new View.OnClickListener() {
+    private void reloadGridView() {
+        gridView.invalidateViews();
+        final ArrayList<AdapterConnector> connectionList = new ArrayList<>();
+        connectionList.add(new AdapterConnector("icon_qora.png", null, null));
+        connectionList.add(new AdapterConnector("icon_twitter.png", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 twitterLogin();
@@ -130,14 +134,14 @@ public class MyProfileActivity extends AppCompatActivity {
         if (isFBLoggedIn()) {
             // get FB URL from DB
             Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK());
-            connectionList.add(new Connections("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
+            connectionList.add(new AdapterConnector("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onFbLogout();
                 }
             }));
         } else {
-            connectionList.add(new Connections("icon_facebook.png", null, new View.OnClickListener() {
+            connectionList.add(new AdapterConnector("icon_facebook.png", null, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onFblogin();
@@ -145,9 +149,9 @@ public class MyProfileActivity extends AppCompatActivity {
             }));
         }
 
-        connectionList.add(new Connections("icon_linkedin.png", null, null));
+        connectionList.add(new AdapterConnector("icon_linkedin.png", null, null));
 
-        myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
+        gridView.setAdapter(new GridViewAdapter(this, R.layout.grid_item_layout, connectionList));
 
     }
 
@@ -212,7 +216,7 @@ public class MyProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //delete facebook record
                 DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
-                reloadListView();
+                reloadGridView();
                 Toast.makeText(context, "Unlinked Facebook account", Toast.LENGTH_SHORT).show();
             }
         });
@@ -245,7 +249,7 @@ public class MyProfileActivity extends AppCompatActivity {
                                     final Facebook fb = new Facebook(KVStore.getCurrentUserPK(), fbID, imageURL);
                                     DBHelper.getInstance().createFBRecord(fb);
                                     Toast.makeText(context, "Linked Facebook account", Toast.LENGTH_SHORT).show();
-                                    reloadListView();
+                                    reloadGridView();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
