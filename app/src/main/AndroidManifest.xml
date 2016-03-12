@@ -3,6 +3,7 @@
     package="com.scu.jenny.enamecard">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
 
     <application
@@ -20,8 +21,8 @@
             android:label="@string/title_activity_log_in"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".thirdparty.TwitterActivity" />
-        <activity android:name=".thirdparty.TwitterInit" />
+        <!--<activity android:name=".thirdparty.TwitterActivity" />-->
+        <!--<activity android:name=".thirdparty.TwitterInit" />-->
         <activity
             android:name=".MainPageActivity"
             android:label="@string/title_activity_main_page"
@@ -34,7 +35,10 @@
         <activity android:name=".ScanActivity" />
         <activity android:name=".NameCardsActivity" />
         <activity android:name=".UserNameActivity" />
-        <activity android:name=".WelcomeActivity">
+        <activity
+            android:name=".WelcomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
