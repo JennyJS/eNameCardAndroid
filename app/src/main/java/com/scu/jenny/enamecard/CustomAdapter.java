@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.scu.jenny.enamecard.storage.DrawableManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -27,7 +29,7 @@ public class CustomAdapter extends ArrayAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 
-        final Connections connections = connectionsList.get(position);
+        final Connections connection = connectionsList.get(position);
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View row = inflater.inflate(R.layout.customized_row, null);
 
@@ -35,16 +37,19 @@ public class CustomAdapter extends ArrayAdapter{
         ImageView imageView2 = (ImageView) row.findViewById(R.id.imageView2);
 
         try {
-            InputStream inputStream = getContext().getAssets().open(connections.getIconName());
+            InputStream inputStream = getContext().getAssets().open(connection.getIconName());
             Drawable drawable = Drawable.createFromStream(inputStream, null);
             imageView1.setImageDrawable(drawable);
 
-            inputStream = getContext().getAssets().open(connections.getAddIcon());
-            drawable = Drawable.createFromStream(inputStream, null);
-            imageView2.setImageDrawable(drawable);
-            imageView2.setOnClickListener(connections.getListener());
+            if (connection.getUrl() == null) {
+                inputStream = getContext().getAssets().open("icon_add.png");
+                drawable = Drawable.createFromStream(inputStream, null);
+                imageView2.setImageDrawable(drawable);
+            } else {
+                DrawableManager.getInstance().fetchDrawableOnThread("url", imageView2);
+            }
 
-
+            imageView2.setOnClickListener(connection.getListener());
         } catch (IOException e) {
             e.printStackTrace();
         }

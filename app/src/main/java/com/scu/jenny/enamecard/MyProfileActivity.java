@@ -1,8 +1,10 @@
 package com.scu.jenny.enamecard;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
 import com.scu.jenny.enamecard.storage.KVStore;
+import com.scu.jenny.enamecard.storage.User;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -46,6 +49,7 @@ public class MyProfileActivity extends AppCompatActivity {
     private static TwitterAuthClient twitterAuthClient;
     private LoginType loginType;
     private ImageView logoutBtn;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,7 @@ public class MyProfileActivity extends AppCompatActivity {
         myListView = (ListView) findViewById(R.id.list_view);
         final List<Connections> connectionList = new ArrayList<>();
 
-        connectionList.add(new Connections("icon_qora.png", "icon_add.png", null));
+
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,26 +88,26 @@ public class MyProfileActivity extends AppCompatActivity {
 //            }));
 //
 //        }
-
-        connectionList.add(new Connections("icon_twitter.png", "icon_add.png", new View.OnClickListener() {
+        connectionList.add(new Connections("icon_qora.png", null, null));
+        connectionList.add(new Connections("icon_twitter.png", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 twitterLogin();
             }
         }));
 
-
-
         // Facebook
         if (isFBLoggedIn()) {
-            connectionList.add(new Connections("icon_facebook.png", "connected.jpg", new View.OnClickListener() {
+            // get FB URL from DB
+            Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0));
+            connectionList.add(new Connections("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onFblogin();
+                    onFbLogout();
                 }
             }));
         } else {
-            connectionList.add(new Connections("icon_facebook.png", "icon_add.png", new View.OnClickListener() {
+            connectionList.add(new Connections("icon_facebook.png", null, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onFblogin();
@@ -111,7 +115,7 @@ public class MyProfileActivity extends AppCompatActivity {
             }));
         }
 
-        connectionList.add(new Connections("icon_linkedin.png", "icon_add.png", null));
+        connectionList.add(new Connections("icon_linkedin.png", null, null));
 
         myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
     }
@@ -135,7 +139,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
     public boolean isFBLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        return accessToken != null;
+        return accessToken != null && DBHelper.getInstance().getFBByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0)) != null;
     }
 //
 //    private boolean isTwitterLoggedIn() {
@@ -183,6 +187,30 @@ public class MyProfileActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(fbCallbackmanager, new FBCallBack());
     }
 
+    private void onFbLogout() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MyProfileActivity.this);
+
+        builder.setMessage("Log out Facebook?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //delete facebook record
+                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0));
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     class FBCallBack implements FacebookCallback<LoginResult> {
         @Override
@@ -201,13 +229,12 @@ public class MyProfileActivity extends AppCompatActivity {
 
                                     String jsonresult = String.valueOf(json);
                                     System.out.println("JSON Result" + jsonresult);
-                                    String str_id = json.getString("id");
-                                    String imageURL = "https://graph.facebook.com/" + str_id + "/picture?type=large";
+                                    String fbID = json.getString("id");
+                                    String imageURL = "https://graph.facebook.com/" + fbID + "/picture?type=large";
                                     // Store ID to DB
                                     DBHelper db = DBHelper.getInstance();
-                                    Facebook fb = new Facebook(str_id, imageURL);
+                                    Facebook fb = new Facebook(KVStore.getInstance().get(KVStore.USER_PRIMARY_KEY, 0), fbID, imageURL);
                                     db.createFBRecord(fb);
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

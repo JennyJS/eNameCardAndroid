@@ -54,12 +54,9 @@ public class UserNameActivity extends AppCompatActivity {
                         if (object.has("firstName")){
                             // TODO write to DB
                             DBHelper dbHelper = DBHelper.getInstance();
-                            User user = new User();
-                            user.firstName = object.getString("firtName");
-                            user.lastName = object.getString("lastName");
-                            user.phoneNumber = object.getString("phoneNumber");
-
-                            dbHelper.createUserRecord(user);
+                            User user = new User(object.getString("firtName"), object.getString("lastName"), object.getString("phoneNumber"));
+                            long userPK = DBHelper.getInstance().createUserRecord(user);
+                            KVStore.getInstance().set("userPK", userPK);
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             startActivity(intent);
                         } else {

@@ -11,6 +11,8 @@ public class KVStore {
     private final Context context;
     private final SharedPreferences sharedPrefs;
 
+    public static final String USER_PRIMARY_KEY = "userPK";
+
     private KVStore(Context context) {
         this.context = context;
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -30,7 +32,15 @@ public class KVStore {
         editor.commit();
     }
 
+    public void set(String key, long value) {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putLong(key, value);
+        editor.commit();
+    }
+
     public String get(String key, String dft){
         return sharedPrefs.getString(key, dft);
     }
+
+    public Long get(String key, long dft) { return sharedPrefs.getLong(key, dft);}
 }

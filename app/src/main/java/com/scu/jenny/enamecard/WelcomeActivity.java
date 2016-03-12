@@ -14,6 +14,7 @@ import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.KVStore;
+import com.scu.jenny.enamecard.storage.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         KVStore.init(this);
         context = getApplicationContext();
+        DBHelper.init(context);
         setContentView(R.layout.activity_welcome);
         splash= (ImageView) this.findViewById(R.id.logo_image);
         mContentView = this.getWindow().getDecorView().findViewById(android.R.id.content);
@@ -83,10 +85,15 @@ public class WelcomeActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(jsonRespose);
                         if (jsonObject.has("firstName")){
+                            User user = new User(jsonObject.getString("firstName"), jsonObject.getString("lastName"), jsonObject.getString("phoneNumber"));
+                            long userPK = DBHelper.getInstance().createUserRecord(user);
+                            DBHelper.getInstance().getUserByPhoneNumber(jsonObject.getString("phoneNumber"));
+                            KVStore.getInstance().set("userPK", userPK);
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             intent.putExtra(MainPageActivity.userInfoKey, jsonObject.toString());
                             startActivity(intent);
                         } else if (jsonObject.has("phoneNumber")){
+                            KVStore.getInstance().set("phoneNumber", jsonObject.getString("phoneNumber"));
                             Intent intent = new Intent(getApplicationContext(), UserNameActivity.class);
                             startActivity(intent);
                         } else {
@@ -100,7 +107,6 @@ public class WelcomeActivity extends AppCompatActivity {
             }).execute("GET", "/user");
         } else {
             //TODO purge DB
-            DBHelper.init(context);
             DBHelper dbHelper = DBHelper.getInstance();
             context.deleteDatabase(dbHelper.getDatabaseName());
             Intent intent = new Intent(getApplicationContext(), LogInActivity.class);

@@ -20,6 +20,7 @@ import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.KVStore;
+import com.scu.jenny.enamecard.storage.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -145,6 +146,9 @@ public class LogInActivity extends AppCompatActivity {
 
                 if (object.has("firstName")) {
                     //TODO write to DB
+                    User user = new User(object.getString("firstName"), object.getString("lastName"), object.getString("phoneNumber"));
+                    long userPK = DBHelper.getInstance().createUserRecord(user);
+                    KVStore.getInstance().set("userPK", userPK);
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);
                 } else {

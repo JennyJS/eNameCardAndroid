@@ -7,19 +7,19 @@ import android.view.View;
  */
 public class Connections {
     private String iconName;
-    private String addIcon;
+    private String url;
     private View.OnClickListener listener;
-    public Connections(String iconName, String addIcon, View.OnClickListener listener){
+    public Connections(String iconName, String url, View.OnClickListener listener){
         this.iconName = iconName;
-        this.addIcon = addIcon;
+        this.url = url;
         this.listener = listener;
     }
     public String getIconName() {
         return iconName;
     }
 
-    public String getAddIcon(){
-        return addIcon;
+    public String getUrl(){
+        return url;
     }
 
     public View.OnClickListener getListener(){
