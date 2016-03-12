@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/profile_list_cell_height"
     android:weightSum="1"
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/profile_list_cell_height"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:id="@+id/social_media_view"
+        android:id="@+id/socialMediaIV"
         android:layout_gravity="center_vertical"
         android:contentDescription="Icon"
-        android:src="@drawable/icon_phone_call"
-        android:layout_weight="0.2"
+        android:layout_weight="0.5"
         />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/profile_list_cell_height"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:id="@+id/imageView2"
+        android:id="@+id/linkedIV"
         android:layout_gravity="center_vertical"
-        android:contentDescription="Add"
-        android:src="@drawable/icon_add"
         android:layout_marginLeft="230dp"
         android:clickable="true"
+        android:layout_weight="0.5"
+        android:scaleType="centerCrop"
         />
 
 </LinearLayout>

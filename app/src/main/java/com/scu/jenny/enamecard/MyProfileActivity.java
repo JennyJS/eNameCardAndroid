@@ -1,8 +1,8 @@
 package com.scu.jenny.enamecard;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -24,12 +23,10 @@ import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
 import com.scu.jenny.enamecard.storage.KVStore;
-import com.scu.jenny.enamecard.storage.User;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
@@ -44,20 +41,30 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 
 public class MyProfileActivity extends AppCompatActivity {
-    private ListView myListView;
-    public static CallbackManager fbCallbackmanager;
+    private static CallbackManager fbCallbackmanager;
     private static TwitterAuthClient twitterAuthClient;
+    private Context context;
+
+    public enum LoginType {
+        FACEBOOK,
+        TWITTER,
+        LINKEDIN
+    }
+
+    private ListView myListView;
     private LoginType loginType;
     private ImageView logoutBtn;
-    private User currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+        context = getApplicationContext();
+
         logoutBtn = (ImageView) findViewById(R.id.logoutBtn);
         myListView = (ListView) findViewById(R.id.list_view);
-        final List<Connections> connectionList = new ArrayList<>();
+
 
 
 
@@ -88,37 +95,7 @@ public class MyProfileActivity extends AppCompatActivity {
 //            }));
 //
 //        }
-        connectionList.add(new Connections("icon_qora.png", null, null));
-        connectionList.add(new Connections("icon_twitter.png", null, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                twitterLogin();
-            }
-        }));
-
-        // Facebook
-        if (isFBLoggedIn()) {
-            // get FB URL from DB
-            Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK());
-            System.out.println(fb);
-            connectionList.add(new Connections("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onFbLogout();
-                }
-            }));
-        } else {
-            connectionList.add(new Connections("icon_facebook.png", null, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onFblogin();
-                }
-            }));
-        }
-
-        connectionList.add(new Connections("icon_linkedin.png", null, null));
-
-        myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
+        reloadListView();
     }
 
     @Override
@@ -138,8 +115,43 @@ public class MyProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void reloadListView() {
+        myListView.invalidateViews();
+        final List<Connections> connectionList = new ArrayList<>();
+        connectionList.add(new Connections("icon_qora.png", null, null));
+        connectionList.add(new Connections("icon_twitter.png", null, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                twitterLogin();
+            }
+        }));
+
+        // Facebook
+        if (isFBLoggedIn()) {
+            // get FB URL from DB
+            Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK());
+            connectionList.add(new Connections("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onFbLogout();
+                }
+            }));
+        } else {
+            connectionList.add(new Connections("icon_facebook.png", null, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onFblogin();
+                }
+            }));
+        }
+
+        connectionList.add(new Connections("icon_linkedin.png", null, null));
+
+        myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
+
+    }
+
     public boolean isFBLoggedIn() {
-//        AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK()) != null;
     }
 //
@@ -151,11 +163,7 @@ public class MyProfileActivity extends AppCompatActivity {
 //        return secret != null;
 //    }
 
-    public enum LoginType {
-        FACEBOOK,
-        TWITTER,
-        LINKEDIN
-    }
+
 
     private void twitterLogin() {
         this.loginType = LoginType.TWITTER;
@@ -179,6 +187,12 @@ public class MyProfileActivity extends AppCompatActivity {
 //        Twitter.logIn(MyProfileActivity.this, );
     }
 
+
+
+    /**********************************************************/
+    /*************** FB Login / Logout CallBack ***************/
+    /**********************************************************/
+
     private void onFblogin() {
         this.loginType = LoginType.FACEBOOK;
         fbCallbackmanager = CallbackManager.Factory.create();
@@ -198,6 +212,8 @@ public class MyProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //delete facebook record
                 DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
+                reloadListView();
+                Toast.makeText(context, "Unlinked Facebook account", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -212,7 +228,6 @@ public class MyProfileActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
     class FBCallBack implements FacebookCallback<LoginResult> {
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -222,28 +237,21 @@ public class MyProfileActivity extends AppCompatActivity {
                         @Override
                         public void onCompleted(JSONObject json, GraphResponse response) {
                             if (response.getError() != null) {
-                                // handle error
-                                System.out.println("@@@@@@@@@@@@@@@@@@ERROR");
+                                Toast.makeText(context, "FBLogin failed", Toast.LENGTH_LONG).show();
                             } else {
-                                System.out.println("!!!!!!!!!!!!!!!!!Success");
                                 try {
-
-                                    String jsonresult = String.valueOf(json);
-                                    System.out.println("JSON Result" + jsonresult);
-                                    String fbID = json.getString("id");
-                                    String imageURL = "https://graph.facebook.com/" + fbID + "/picture?type=large";
-                                    // Store ID to DB
-                                    DBHelper db = DBHelper.getInstance();
-                                    Facebook fb = new Facebook(KVStore.getCurrentUserPK(), fbID, imageURL);
-                                    db.createFBRecord(fb);
+                                    final String fbID = json.getString("id");
+                                    final String imageURL = "https://graph.facebook.com/" + fbID + "/picture?type=large";
+                                    final Facebook fb = new Facebook(KVStore.getCurrentUserPK(), fbID, imageURL);
+                                    DBHelper.getInstance().createFBRecord(fb);
+                                    Toast.makeText(context, "Linked Facebook account", Toast.LENGTH_SHORT).show();
+                                    reloadListView();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                         }
-
                     }).executeAsync();
-
         }
 
         @Override

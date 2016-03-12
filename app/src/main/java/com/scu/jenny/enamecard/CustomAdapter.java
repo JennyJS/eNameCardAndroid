@@ -33,8 +33,8 @@ public class CustomAdapter extends ArrayAdapter{
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View row = inflater.inflate(R.layout.customized_row, null);
 
-        ImageView imageView1 = (ImageView) row.findViewById(R.id.social_media_view);
-        ImageView imageView2 = (ImageView) row.findViewById(R.id.imageView2);
+        ImageView imageView1 = (ImageView) row.findViewById(R.id.socialMediaIV);
+        ImageView imageView2 = (ImageView) row.findViewById(R.id.linkedIV);
 
         try {
             InputStream inputStream = getContext().getAssets().open(connection.getIconName());
