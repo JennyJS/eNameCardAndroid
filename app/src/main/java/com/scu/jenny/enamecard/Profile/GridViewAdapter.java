@@ -2,7 +2,9 @@ package com.scu.jenny.enamecard.Profile;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,8 @@ public class GridViewAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final AdapterConnector connection = data.get(position);
+
         View row = null;
         if (convertView != null) {
             row = convertView;
@@ -38,28 +42,39 @@ public class GridViewAdapter extends ArrayAdapter {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.grid_item_layout, null);
         }
-        final AdapterConnector connection = data.get(position);
+
+        GradientDrawable bgShape = (GradientDrawable)row.getBackground();
+        bgShape.setColor(adjustAlpha(Color.parseColor(connection.mediaType.color), 0.7f));
+
         ImageView socialMediaIV = (ImageView) row.findViewById(R.id.socialMediaIV);
         ImageView linkedIV = (ImageView) row.findViewById(R.id.linkedIV);
 
         try {
-            InputStream inputStream = getContext().getAssets().open(connection.getIconName());
+            InputStream inputStream = getContext().getAssets().open(connection.mediaType.iconName);
             Drawable drawable = Drawable.createFromStream(inputStream, null);
             socialMediaIV.setImageDrawable(drawable);
 
-            if (connection.getUrl() == null) {
+            if (connection.url == null) {
                 inputStream = getContext().getAssets().open("icon_add.png");
                 drawable = Drawable.createFromStream(inputStream, null);
                 linkedIV.setImageDrawable(drawable);
             } else {
-                DrawableManager.getInstance().fetchDrawableOnThread(connection.getUrl(), linkedIV);
+                DrawableManager.getInstance().fetchDrawableOnThread(connection.url, linkedIV);
             }
 
-            linkedIV.setOnClickListener(connection.getListener());
+            linkedIV.setOnClickListener(connection.listener);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return row;
+    }
+
+    public int adjustAlpha(int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(alpha, red, green, blue);
     }
 }

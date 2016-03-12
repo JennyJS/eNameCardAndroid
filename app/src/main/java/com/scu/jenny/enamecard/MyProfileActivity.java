@@ -24,6 +24,7 @@ import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
 import com.scu.jenny.enamecard.storage.KVStore;
+import com.scu.jenny.enamecard.thirdparty.MediaType;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -37,7 +38,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -46,17 +46,11 @@ public class MyProfileActivity extends AppCompatActivity {
     private static TwitterAuthClient twitterAuthClient;
     private Context context;
 
-    public enum LoginType {
-        FACEBOOK,
-        TWITTER,
-        LINKEDIN
-    }
-
-//    private ListView myListView;
+    //    private ListView myListView;
     private GridView gridView;
     private GridViewAdapter gridAdapter;
 
-    private LoginType loginType;
+    private MediaType mediaType;
     private ImageView logoutBtn;
 
 
@@ -105,8 +99,8 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (this.loginType != null) {
-            switch (this.loginType) {
+        if (this.mediaType != null) {
+            switch (this.mediaType) {
                 case FACEBOOK:
                     fbCallbackmanager.onActivityResult(requestCode, resultCode, data);
                     break;
@@ -122,8 +116,8 @@ public class MyProfileActivity extends AppCompatActivity {
     private void reloadGridView() {
         gridView.invalidateViews();
         final ArrayList<AdapterConnector> connectionList = new ArrayList<>();
-        connectionList.add(new AdapterConnector("icon_qora.png", null, null));
-        connectionList.add(new AdapterConnector("icon_twitter.png", null, new View.OnClickListener() {
+        connectionList.add(new AdapterConnector(MediaType.QUORA, null, null));
+        connectionList.add(new AdapterConnector(MediaType.TWITTER, null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 twitterLogin();
@@ -134,14 +128,14 @@ public class MyProfileActivity extends AppCompatActivity {
         if (isFBLoggedIn()) {
             // get FB URL from DB
             Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK());
-            connectionList.add(new AdapterConnector("icon_facebook.png", fb == null ? null : fb.imageURL, new View.OnClickListener() {
+            connectionList.add(new AdapterConnector(MediaType.FACEBOOK, fb == null ? null : fb.imageURL, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onFbLogout();
                 }
             }));
         } else {
-            connectionList.add(new AdapterConnector("icon_facebook.png", null, new View.OnClickListener() {
+            connectionList.add(new AdapterConnector(MediaType.FACEBOOK, null, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onFblogin();
@@ -149,7 +143,7 @@ public class MyProfileActivity extends AppCompatActivity {
             }));
         }
 
-        connectionList.add(new AdapterConnector("icon_linkedin.png", null, null));
+        connectionList.add(new AdapterConnector(MediaType.LINKEDIN, null, null));
 
         gridView.setAdapter(new GridViewAdapter(this, R.layout.grid_item_layout, connectionList));
 
@@ -170,7 +164,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
 
     private void twitterLogin() {
-        this.loginType = LoginType.TWITTER;
+        this.mediaType = MediaType.TWITTER;
         final TwitterAuthConfig authConfig = new TwitterAuthConfig("jXx0mVmLepyR6M7OC8fDmyePL", "4br7HIvYi3oQUCjXsHBswLtIyPfUlTtLf3muP4jszeNXhAy4Gr");
         Fabric.with(this, new Twitter(authConfig));
         twitterAuthClient = new TwitterAuthClient();
@@ -198,7 +192,7 @@ public class MyProfileActivity extends AppCompatActivity {
     /**********************************************************/
 
     private void onFblogin() {
-        this.loginType = LoginType.FACEBOOK;
+        this.mediaType = MediaType.FACEBOOK;
         fbCallbackmanager = CallbackManager.Factory.create();
         // Set permissions
         LoginManager.getInstance().logOut();
