@@ -5,7 +5,7 @@
       android:id="@+id/slider_bg"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@drawable/slidetounlock_bg"
+      android:background="@drawable/slider_shape"
       />
 
   <TextView
@@ -25,7 +25,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:progressDrawable="@android:color/transparent"
-      android:thumb="@drawable/slidetounlock_thumb"
+      android:thumb="@drawable/slider_60x40"
       android:layout_marginTop="2dp"
       />
 </merge>

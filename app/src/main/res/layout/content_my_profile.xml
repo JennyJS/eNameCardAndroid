@@ -101,7 +101,7 @@
         android:layout_margin="15dp"
         android:layout_centerInParent="true"
         android:progressDrawable="@android:color/transparent"
-        android:thumb="@drawable/slidetounlock_thumb"
+        android:thumb="@drawable/slider_60x40"
         android:layout_marginTop="2dp"
         />
 </LinearLayout>
