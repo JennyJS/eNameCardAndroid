@@ -50,7 +50,7 @@ public class UserNameActivity extends AppCompatActivity {
                     try{
                         JSONObject object = new JSONObject(jsonRespose);
                         if (object.has("firstName")){
-                            User user = new User(object.getString("firtName"), object.getString("lastName"), object.getString("phoneNumber"));
+                            User user = User.getUserFromJsonObj(object);
                             DBHelper.getInstance().updateOrCreateUserRecord(user);
 
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);

@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by jenny on 3/8/16.
  */
@@ -20,43 +23,51 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "userInfo";
+    private static final String DATABASE_NAME = "eNameCard";
 
     //Table Names
-    private static final String TABLE_BASIC = "basicInfo";
-    private static final String TABLE_FB = "fbInfo";
+    private static final String TABLE_USER = "user";
+    private static final String TABLE_SOCIAL_MEDIA = "socialMedia";
 
     //Common colum names
     public static final String PRIMARY_ID = "id";
 
     //Basic Table-column names
-    public static final String PHONE_NUMBER = "phoneNumber";
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
+    public static final String PHONE_NUMBER = "phoneNumber";
+    public static final String PROFILE_IMAGE_URL = "imageURL";
 
     public static final String[] USER_COLUMS = {
-            PHONE_NUMBER, FIRST_NAME, LAST_NAME
+            PRIMARY_ID, PHONE_NUMBER, FIRST_NAME, LAST_NAME, PROFILE_IMAGE_URL
     };
 
-    //FB Table-column names
-    public static final String FB_ID = "fbId";
-    public static final String PHOTO_PATH = "photoPath";
-    public static final String USER_PK_ID = "basicTableId";
+    //Social Media Table-column names
+    public static final String USER_PK_ID = "userId";
+    public static final String MEDIA_TYPE = "mediaType";
+    public static final String MEDIA_RECORD_ID = "mediaRecordId";
+    public static final String IMAGE_URL = "imageURL";
 
-    public static final String[] FB_COLUMS = {
-            USER_PK_ID, FB_ID, PHOTO_PATH
+
+    public static final String[] SOCIAL_MEDIA_COLUMS = {
+            USER_PK_ID, MEDIA_TYPE, MEDIA_RECORD_ID, IMAGE_URL
     };
 
     //Create tables
-    private static final String CREATE_TABLE_BASIC = "CREATE TABLE IF NOT EXISTS " + TABLE_BASIC
-            + "(" + PRIMARY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + PHONE_NUMBER + " TEXT,"
-            + FIRST_NAME + " TEXT," + LAST_NAME + ")";
+    private static final String CREATE_TABLE_BASIC = "CREATE TABLE IF NOT EXISTS " + TABLE_USER
+            + "(" + PRIMARY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            PHONE_NUMBER + " TEXT,"
+            + FIRST_NAME + " TEXT," +
+            LAST_NAME + " TEXT," +
+            PROFILE_IMAGE_URL + " TEXT" +
+            ")";
 
-    private static final String CREATE_TABLE_FB = "CREATE TABLE IF NOT EXISTS " + TABLE_FB + "(" +
+    private static final String CREATE_TABLE_SOCIAL_MEDIA = "CREATE TABLE IF NOT EXISTS " + TABLE_SOCIAL_MEDIA + "(" +
             PRIMARY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            FB_ID + " TEXT," +
-            PHOTO_PATH + " TEXT," +
-            USER_PK_ID + " INTEGER," + " FOREIGN KEY ("+ USER_PK_ID +") REFERENCES "+TABLE_BASIC+"("+ PRIMARY_ID +"));";
+            MEDIA_TYPE + " TEXT," +
+            MEDIA_RECORD_ID + " TEXT," +
+            IMAGE_URL + " TEXT," +
+            USER_PK_ID + " INTEGER," + " FOREIGN KEY ("+ USER_PK_ID +") REFERENCES "+ TABLE_USER +"("+ PRIMARY_ID +"));";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -65,13 +76,13 @@ public class DBHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_BASIC);
-        db.execSQL(CREATE_TABLE_FB);
+        db.execSQL(CREATE_TABLE_SOCIAL_MEDIA);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BASIC);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FB);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOCIAL_MEDIA);
     }
 
     public static void init(Context context) {
@@ -94,7 +105,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public User getUserByPhoneNumber(String phoneNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_BASIC, // a. table
+        Cursor cursor = db.query(TABLE_USER, // a. table
                 USER_COLUMS, // b. column names
                 " " + PHONE_NUMBER + " = ?", // c. selections
                 new String[]{String.valueOf(phoneNumber)}, // d. selections args
@@ -106,15 +117,23 @@ public class DBHelper extends SQLiteOpenHelper{
             return null;
         }
         cursor.moveToFirst();
-        User user = new User(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+
+        final long id = cursor.getLong(0);
+        final String firstName = cursor.getString(1);
+        final String lastName = cursor.getString(2);
+        phoneNumber = cursor.getColumnName(3);
+        final String imageURL = cursor.getColumnName(4);
+
+        List<User.SocialMedia> socialMedias = getSocialMediasByUserID(id);
+
         db.close();
-        return user;
+        return new User(firstName, lastName, phoneNumber, imageURL, socialMedias);
     }
 
-    public Facebook getFBByUserID(long userPK) {
+    public List<User.SocialMedia> getSocialMediasByUserID(long userPK) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_FB,
-                FB_COLUMS,
+        Cursor cursor = db.query(TABLE_SOCIAL_MEDIA,
+                SOCIAL_MEDIA_COLUMS,
                 " " + USER_PK_ID + "= ?",
                 new String[]{String.valueOf(userPK)},
                 null,
@@ -123,12 +142,22 @@ public class DBHelper extends SQLiteOpenHelper{
                 null
                 );
         if (cursor.getCount() == 0) {
-            System.out.println("Not getting FB " + userPK);
+            System.out.println("Not getting soical media" + userPK);
             return null;
         }
         System.out.println("Getting FB");
         cursor.moveToFirst();
-        return new Facebook(cursor.getLong(0), cursor.getString(1), cursor.getString(2));
+        List<User.SocialMedia> socialMedias = new ArrayList<>();
+        while(!cursor.isAfterLast()){
+            Long userId = cursor.getLong(0);
+            String mediaType = cursor.getString(1);
+            String mediaRecordId = cursor.getString(2);
+            String imageURL = cursor.getString(3);
+            User.SocialMedia socialMedia = new User.SocialMedia(mediaType, mediaRecordId, imageURL);
+            socialMedias.add(socialMedia);
+            cursor.moveToNext();
+        }
+        return socialMedias;
     }
 
     public long updateOrCreateUserRecord(User user) {
@@ -143,12 +172,23 @@ public class DBHelper extends SQLiteOpenHelper{
         long row_id;
 
         if (old == null) {
-            row_id = db.insert(TABLE_BASIC, null, values);
+            row_id = db.insert(TABLE_USER, null, values);
         } else {
-            row_id = db.update(TABLE_BASIC, values, null, null);
+            row_id = db.update(TABLE_USER, values, null, null);
+        }
+
+        // store social media
+        for (User.SocialMedia socialMedia : user.socialMediaList) {
+            values = new ContentValues();
+            values.put(USER_PK_ID, row_id);
+            values.put(MEDIA_TYPE, socialMedia.mediaType);
+            values.put(MEDIA_RECORD_ID, socialMedia.mediaRecordId);
+            values.put(IMAGE_URL, socialMedia.imageURL);
+            db.insert(TABLE_SOCIAL_MEDIA, null, values);
         }
 
         KVStore.setCurrentUserPK(row_id);
+        CurrentUser.refreshFromDB(user);
         db.close();
         return row_id;
     }
@@ -157,14 +197,14 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(USER_PK_ID, fb.userID);
-        values.put(FB_ID, fb.fbId);
-        values.put(PHOTO_PATH, fb.imageURL);
-        db.insert(TABLE_FB, null, values);
+        values.put(MEDIA_RECORD_ID, fb.fbId);
+        values.put(IMAGE_URL, fb.imageURL);
+        db.insert(TABLE_SOCIAL_MEDIA, null, values);
         return;
     }
 
     public void deleteFBRecordByUserID(long userID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_FB, USER_PK_ID + "= ?", new String[]{String.valueOf(userID)});
+        db.delete(TABLE_SOCIAL_MEDIA, USER_PK_ID + "= ?", new String[]{String.valueOf(userID)});
     }
 }

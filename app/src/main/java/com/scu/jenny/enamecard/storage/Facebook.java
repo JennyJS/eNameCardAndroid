@@ -1,5 +1,10 @@
 package com.scu.jenny.enamecard.storage;
 
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by jenny on 3/9/16.
  */
@@ -15,6 +20,18 @@ public class Facebook {
         this.userID = userID;
         this.fbId = fbId;
         this.imageURL = imageURL;
+    }
+
+    public JSONObject toJsonObj() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("mediaType", "facebook");
+            json.put("mediaRecordId", this.fbId);
+            json.put("imageURL", this.imageURL);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 
     @Override

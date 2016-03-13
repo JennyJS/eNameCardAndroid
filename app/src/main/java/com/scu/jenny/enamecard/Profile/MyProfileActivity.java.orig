@@ -18,17 +18,18 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+<<<<<<< HEAD:app/src/main/java/com/scu/jenny/enamecard/Profile/MyProfileActivity.java
 import com.scu.jenny.enamecard.LogInActivity;
-import com.scu.jenny.enamecard.Profile.GridViewAdapter;
 import com.scu.jenny.enamecard.R;
+=======
+import com.scu.jenny.enamecard.Profile.GridViewAdapter;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
-import com.scu.jenny.enamecard.storage.CurrentUser;
+>>>>>>> 1b6893a... Support POST /user/socialMedia:app/src/main/java/com/scu/jenny/enamecard/MyProfileActivity.java
 import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
 import com.scu.jenny.enamecard.storage.KVStore;
-import com.scu.jenny.enamecard.storage.User;
 import com.scu.jenny.enamecard.thirdparty.MediaType;
 import com.scu.jenny.enamecard.widget.SlideToUnlock;
 import com.twitter.sdk.android.Twitter;
@@ -44,11 +45,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
-
-import static com.scu.jenny.enamecard.storage.User.*;
 
 public class MyProfileActivity extends AppCompatActivity implements SlideToUnlock.OnUnlockListener {
     private static CallbackManager fbCallbackmanager;
@@ -62,6 +60,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     private GridViewAdapter gridAdapter;
 
     private MediaType mediaType;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +132,10 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         }));
 
         // Facebook
-        final SocialMedia fb = CurrentUser.getFacebook();
-        if (fb != null) {
-            connectionList.add(new AdapterConnector(MediaType.FACEBOOK, fb.imageURL, new View.OnClickListener() {
+        if (isFBLoggedIn()) {
+            // get FB URL from DB
+            Facebook fb = DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK());
+            connectionList.add(new AdapterConnector(MediaType.FACEBOOK, fb == null ? null : fb.imageURL, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onFbLogout();
@@ -156,6 +156,9 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
     }
 
+    public boolean isFBLoggedIn() {
+        return DBHelper.getInstance().getFBByUserID(KVStore.getCurrentUserPK()) != null;
+    }
 //
 //    private boolean isTwitterLoggedIn() {
 //        TwitterSession session = Twitter.getSessionManager().getActiveSession();
@@ -256,7 +259,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                                                     reloadGridView();
                                                 }
                                             } catch (JSONException e) {
-                                                Toast.makeText(MyProfileActivity.this, "Record may already exist", Toast.LENGTH_SHORT).show();
+                                                e.printStackTrace();
                                             }
                                         }
                                     }).execute("POST", "/user/socialMedia", fb.toJsonObj().toString());

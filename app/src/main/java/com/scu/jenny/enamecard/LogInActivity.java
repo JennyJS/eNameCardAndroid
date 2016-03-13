@@ -43,7 +43,6 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         thisActivity = this;
-        // TODO purge DB delte all tables
         DBHelper dbHelper = DBHelper.getInstance();
         getApplicationContext().deleteDatabase(dbHelper.getDatabaseName());
         setContentView(R.layout.activity_log_in);
@@ -139,13 +138,11 @@ public class LogInActivity extends AppCompatActivity {
         @Override
         public void process(String jsonRespose) {
             try {
-                JSONObject object = new JSONObject(jsonRespose);
+                JSONObject jsonObject = new JSONObject(jsonRespose);
 
-                if (object.has("firstName")) {
-                    //TODO write to DB
-                    User user = new User(object.getString("firstName"), object.getString("lastName"), object.getString("phoneNumber"));
+                if (jsonObject.has("firstName")) {
+                    User user = User.getUserFromJsonObj(jsonObject);
                     DBHelper.getInstance().updateOrCreateUserRecord(user);
-
                     Intent intent = new Intent(thisActivity, MainPageActivity.class);
                     startActivity(intent);
                 } else {

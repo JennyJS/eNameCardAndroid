@@ -85,7 +85,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(jsonRespose);
                         if (jsonObject.has("firstName")){
-                            User user = new User(jsonObject.getString("firstName"), jsonObject.getString("lastName"), jsonObject.getString("phoneNumber"));
+                            User user = User.getUserFromJsonObj(jsonObject);
                             long userPK = DBHelper.getInstance().updateOrCreateUserRecord(user);
                             DBHelper.getInstance().getUserByPhoneNumber(jsonObject.getString("phoneNumber"));
                             KVStore.getInstance().set("userPK", userPK);
