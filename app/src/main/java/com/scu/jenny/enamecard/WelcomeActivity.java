@@ -58,7 +58,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // Animate the content view to 100% opacity, and clear any animation
         // listener set on the view.
         mContentView.animate()
-                .alpha(1f)
+                .alpha(10f)
                 .setDuration(6000)
                 .setListener(null);
 

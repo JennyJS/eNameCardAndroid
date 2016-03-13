@@ -7,7 +7,7 @@ public enum MediaType {
     FACEBOOK("#47639C", "icon_facebook.png"),
     TWITTER("#2AA3EF",  "icon_twitter.png"),
     LINKEDIN("#2386BA", "icon_linkedin.png"),
-    QUORA("#B72D2C",    "icon_qora.png");
+    QUORA("#B72D2C",    "icon_quora.png");
 
     public final String color;
     public final String iconName;
