@@ -54,7 +54,6 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     private GridViewAdapter gridAdapter;
 
     private MediaType mediaType;
-    private ImageView logoutBtn;
 
 
     @Override
@@ -66,21 +65,8 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         slideToUnlock = (SlideToUnlock) findViewById(R.id.slidetounlock);
         slideToUnlock.setOnUnlockListener(this);
 
-        logoutBtn = (ImageView) findViewById(R.id.logoutBtn);
 //        myListView = (ListView) findViewById(R.id.list_view);
         gridView = (GridView) findViewById(R.id.gridView);
-
-
-
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MyProfileActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
-                KVStore.getInstance().set("secret", null);
-                Intent intent = new Intent(MyProfileActivity.this, LogInActivity.class);
-                startActivity(intent);
-            }
-        });
 
         // Twitter
 //        if(isTwitterLoggedIn()){
@@ -104,7 +90,10 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
     @Override
     public void onUnlock() {
-        Toast.makeText(this, "Unlocked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MyProfileActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
+        KVStore.getInstance().set("secret", null);
+        Intent intent = new Intent(MyProfileActivity.this, LogInActivity.class);
+        startActivity(intent);
     }
 
 

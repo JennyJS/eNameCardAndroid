@@ -36,7 +36,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:orientation="vertical"
             android:weightSum="1"
             >
@@ -57,20 +57,7 @@
                 android:layout_weight="0.5"
                 />
         </LinearLayout>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.2"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentRight="true"
-            android:id="@+id/logoutBtn"
-            android:clickable="true"
-            android:src="@drawable/logout_80x110"
-            />
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
