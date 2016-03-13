@@ -1,7 +1,7 @@
 package com.scu.jenny.enamecard.thirdparty;
 
 /**
- * Created by fengjiang on 3/12/16.
+ * Created by manhong on 3/12/16.
  */
 public enum MediaType {
     FACEBOOK("#47639C", "icon_facebook.png"),
