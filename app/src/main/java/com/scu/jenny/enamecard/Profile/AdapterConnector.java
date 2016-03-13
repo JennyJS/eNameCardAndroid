@@ -1,4 +1,4 @@
-package com.scu.jenny.enamecard;
+package com.scu.jenny.enamecard.Profile;
 
 import android.view.View;
 

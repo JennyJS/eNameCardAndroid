@@ -4,11 +4,8 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.scu.jenny.enamecard.Profile.MyProfileActivity;
 
 public class MainPageActivity extends TabActivity  {
     public static final String userInfoKey = "USER_INFO";

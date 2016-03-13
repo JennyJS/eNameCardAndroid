@@ -7,17 +7,29 @@
 
     <ImageView
         android:id="@+id/socialMediaIV"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
+        />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/linkedIV"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FFFFFFFF"
+        android:layout_gravity="center"
+        android:clickable="true"
         />
 
     <ImageView
-        android:id="@+id/linkedIV"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:paddingTop="10dp"
+        android:id="@+id/unlinkedIV"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
         android:layout_gravity="center"
+        android:clickable="true"
         />
-
 </LinearLayout>

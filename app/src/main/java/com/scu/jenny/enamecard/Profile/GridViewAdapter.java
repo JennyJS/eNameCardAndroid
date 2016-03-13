@@ -1,18 +1,16 @@
 package com.scu.jenny.enamecard.Profile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.scu.jenny.enamecard.AdapterConnector;
 import com.scu.jenny.enamecard.R;
 import com.scu.jenny.enamecard.storage.DrawableManager;
 
@@ -47,6 +45,7 @@ public class GridViewAdapter extends ArrayAdapter {
         bgShape.setColor(adjustAlpha(Color.parseColor(connection.mediaType.color), 0.7f));
 
         ImageView socialMediaIV = (ImageView) row.findViewById(R.id.socialMediaIV);
+        ImageView unlinkedIV = (ImageView) row.findViewById(R.id.unlinkedIV);
         ImageView linkedIV = (ImageView) row.findViewById(R.id.linkedIV);
 
         try {
@@ -57,12 +56,16 @@ public class GridViewAdapter extends ArrayAdapter {
             if (connection.url == null) {
                 inputStream = getContext().getAssets().open("link_icon_word.png");
                 drawable = Drawable.createFromStream(inputStream, null);
-                linkedIV.setImageDrawable(drawable);
+                unlinkedIV.setImageDrawable(drawable);
+                linkedIV.setVisibility(View.GONE);
+                unlinkedIV.setOnClickListener(connection.listener);
             } else {
+                unlinkedIV.setVisibility(View.GONE);
                 DrawableManager.getInstance().fetchDrawableOnThread(connection.url, linkedIV);
+                linkedIV.setOnClickListener(connection.listener);
             }
 
-            linkedIV.setOnClickListener(connection.listener);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

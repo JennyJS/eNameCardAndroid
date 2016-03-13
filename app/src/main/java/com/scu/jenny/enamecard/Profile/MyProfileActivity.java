@@ -1,4 +1,4 @@
-package com.scu.jenny.enamecard;
+package com.scu.jenny.enamecard.Profile;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -19,7 +18,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.scu.jenny.enamecard.Profile.GridViewAdapter;
+import com.scu.jenny.enamecard.LogInActivity;
+import com.scu.jenny.enamecard.R;
 import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
