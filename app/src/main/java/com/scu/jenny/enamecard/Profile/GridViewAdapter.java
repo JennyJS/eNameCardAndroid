@@ -55,7 +55,7 @@ public class GridViewAdapter extends ArrayAdapter {
             socialMediaIV.setImageDrawable(drawable);
 
             if (connection.url == null) {
-                inputStream = getContext().getAssets().open("icon_add.png");
+                inputStream = getContext().getAssets().open("link_icon_word.png");
                 drawable = Drawable.createFromStream(inputStream, null);
                 linkedIV.setImageDrawable(drawable);
             } else {
