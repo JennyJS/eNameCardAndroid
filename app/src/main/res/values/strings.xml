@@ -6,4 +6,6 @@
     <string name="title_activity_main_page">MainPageActivity</string>
     <string name="title_activity_my_profile">MyProfileActivity</string>
     <string name="facebook_app_id">1407817282577857</string>
+    <string name="slidetounlock_label">slide to unlock</string>
+    <string name="slidetounlock_label_default">slide to unlock</string>
 </resources>

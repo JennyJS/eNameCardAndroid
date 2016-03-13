@@ -25,6 +25,7 @@ import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
 import com.scu.jenny.enamecard.storage.KVStore;
 import com.scu.jenny.enamecard.thirdparty.MediaType;
+import com.scu.jenny.enamecard.widget.SlideToUnlock;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -41,9 +42,11 @@ import java.util.Arrays;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity implements SlideToUnlock.OnUnlockListener {
     private static CallbackManager fbCallbackmanager;
     private static TwitterAuthClient twitterAuthClient;
+
+    private SlideToUnlock slideToUnlock;
     private Context context;
 
     //    private ListView myListView;
@@ -59,6 +62,9 @@ public class MyProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
         context = getApplicationContext();
+
+        slideToUnlock = (SlideToUnlock) findViewById(R.id.slidetounlock);
+        slideToUnlock.setOnUnlockListener(this);
 
         logoutBtn = (ImageView) findViewById(R.id.logoutBtn);
 //        myListView = (ListView) findViewById(R.id.list_view);
@@ -95,6 +101,12 @@ public class MyProfileActivity extends AppCompatActivity {
 //        }
         reloadGridView();
     }
+
+    @Override
+    public void onUnlock() {
+        Toast.makeText(this, "Unlocked", Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
