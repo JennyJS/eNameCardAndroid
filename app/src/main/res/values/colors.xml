@@ -13,4 +13,7 @@
     <color name="drakBG">#3C3D3E</color>
     <color name="brightText">#EBFFFF</color>
     <color name="brightBG">#F6F6F6</color>
+    <color name="tabMedium">#2B2B2B</color>
+    <color name="tabDark">#000000</color>
+    <color name="tabTransparent">#10ffffff</color>
 </resources>
