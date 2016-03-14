@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -25,6 +30,7 @@ import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.storage.CurrentUser;
 import com.scu.jenny.enamecard.storage.DBHelper;
+import com.scu.jenny.enamecard.storage.DrawableManager;
 import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
 import com.scu.jenny.enamecard.storage.KVStore;
@@ -46,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.fabric.sdk.android.Fabric;
 import retrofit.http.DELETE;
 
@@ -55,6 +62,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     private static CallbackManager fbCallbackmanager;
     private static TwitterAuthClient twitterAuthClient;
 
+    private CircleImageView profileView;
     private SlideToUnlock slideToUnlock;
     private Context context;
 
@@ -70,29 +78,16 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         setContentView(R.layout.activity_my_profile);
         context = getApplicationContext();
 
+        profileView = (CircleImageView) findViewById(R.id.profileIV);
+        if (CurrentUser.getCurrentUser().imageURL != null) {
+            DrawableManager.getInstance().fetchDrawableOnThread(CurrentUser.getCurrentUser().imageURL, profileView);
+        }
+        profileView.setOnClickListener(getProfileViewOnClickListener());
+
         slideToUnlock = (SlideToUnlock) findViewById(R.id.slidetounlock);
         slideToUnlock.setOnUnlockListener(this);
 
-//        myListView = (ListView) findViewById(R.id.list_view);
         gridView = (GridView) findViewById(R.id.gridView);
-
-        // Twitter
-//        if(isTwitterLoggedIn()){
-//            connectionList.add(new AdapterConnector("icon_twitter.png", "connected.jpg", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    twitterLogin();
-//                }
-//            }));
-//        } else {
-//            connectionList.add(new AdapterConnector("icon_twitter.png", "icon_add.png", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    twitterLogin();
-//                }
-//            }));
-//
-//        }
         reloadGridView();
     }
 
@@ -188,6 +183,70 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         });
 
 //        Twitter.logIn(MyProfileActivity.this, );
+    }
+
+    /**********************************************************/
+    /************** Profile View OnClickListener **************/
+    /**********************************************************/
+    private View.OnClickListener getProfileViewOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CurrentUser.getCurrentUser().socialMediaList == null || CurrentUser.getCurrentUser().socialMediaList.size() == 0) {
+                    Toast.makeText(MyProfileActivity.this, "You haven't linked any social account yet", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                class Item{
+                    public final String mediaType;
+                    public final String imageURL;
+                    public Item(String mediaType, String imageURL) {
+                        this.mediaType = mediaType;
+                        this.imageURL = imageURL;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return mediaType;
+                    }
+                }
+
+                final Item[] items = new Item[CurrentUser.getCurrentUser().socialMediaList.size()];
+                for (int i = 0; i < CurrentUser.getCurrentUser().socialMediaList.size(); i++) {
+                    SocialMedia socialMedia = CurrentUser.getCurrentUser().socialMediaList.get(i);
+                    items[0] = new Item(socialMedia.mediaType, socialMedia.imageURL);
+                }
+
+                ListAdapter adapter = new ArrayAdapter<Item>(
+                        MyProfileActivity.this,
+                        android.R.layout.select_dialog_item,
+                        android.R.id.text1,
+                        items){
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        //Use super class to create the View
+                        View v = super.getView(position, convertView, parent);
+                        TextView tv = (TextView)v.findViewById(android.R.id.text1);
+
+                        //Put the image on the TextView
+
+                        tv.setCompoundDrawablesWithIntrinsicBounds(DrawableManager.getInstance().fetchDrawable(items[position].imageURL), null, null, null);
+
+                        //Add margin between image and text (support various screen densities)
+                        int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+                        tv.setCompoundDrawablePadding(dp5);
+
+                        return v;
+                    }
+                };
+                new AlertDialog.Builder(MyProfileActivity.this)
+                        .setTitle("Share Appliction")
+                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                //...
+                            }
+                        }).show();
+            }
+        };
     }
 
 
