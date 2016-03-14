@@ -19,7 +19,7 @@ public class CurrentUser {
         facebook = null;
 
         currentUser = user;
-        List<User.SocialMedia> socialMedias = user.socialMediaList;
+        List<User.SocialMedia> socialMedias = user.socialMedias;
         for (User.SocialMedia socialMedia : socialMedias) {
             if (socialMedia.mediaType.equals("facebook")) {
                 facebook = socialMedia;

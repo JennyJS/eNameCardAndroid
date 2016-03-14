@@ -178,7 +178,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         // store social media
-        for (User.SocialMedia socialMedia : user.socialMediaList) {
+        for (User.SocialMedia socialMedia : user.socialMedias) {
             values = new ContentValues();
             values.put(USER_PK_ID, row_id);
             values.put(MEDIA_TYPE, socialMedia.mediaType);

@@ -12,18 +12,52 @@ import java.util.List;
  */
 public class User {
 
-    public final String firstName;
-    public final String lastName;
-    public final String phoneNumber;
-    public final String imageURL;
-    public final List<SocialMedia> socialMediaList;
+    public String firstName;
+    public String lastName;
+    public String phoneNumber;
+    public String imageURL;
+    public final List<SocialMedia> socialMedias;
 
-    public User(String firstName, String lastName, String phoneNumber, String imageURL, List<SocialMedia> socialMediaList) {
+    public User(String firstName, String lastName, String phoneNumber, String imageURL, List<SocialMedia> socialMedias) {
         this.phoneNumber = phoneNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.imageURL = imageURL;
-        this.socialMediaList = socialMediaList;
+        this.socialMedias = socialMedias;
+    }
+
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            if (firstName != null) {
+                jsonObject.put("firstName", firstName);
+            }
+
+            if (lastName != null) {
+                jsonObject.put("lastName", lastName);
+            }
+
+            if (phoneNumber != null) {
+                jsonObject.put("phoneNumber", phoneNumber);
+            }
+
+            if (imageURL != null) {
+                jsonObject.put("imageURL", imageURL);
+            }
+
+            if (socialMedias != null && socialMedias.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                jsonObject.put("socialMedias", jsonArray);
+                for (SocialMedia socialMedia : socialMedias) {
+                    jsonArray.put(socialMedia.toJsonObj());
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
     }
 
     public static class SocialMedia {

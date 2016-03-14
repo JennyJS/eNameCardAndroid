@@ -7,17 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Pair;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -28,14 +20,13 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.scu.jenny.enamecard.LogInActivity;
-import com.scu.jenny.enamecard.Profile.GridViewAdapter;
+import com.scu.jenny.enamecard.MainPageActivity;
 import com.scu.jenny.enamecard.R;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.storage.CurrentUser;
 import com.scu.jenny.enamecard.storage.DBHelper;
 import com.scu.jenny.enamecard.storage.DrawableManager;
-import com.scu.jenny.enamecard.storage.Facebook;
 //import com.scu.jenny.enamecard.thirdparty.TwitterActivity;
 import com.scu.jenny.enamecard.storage.KVStore;
 import com.scu.jenny.enamecard.storage.User;
@@ -58,7 +49,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.fabric.sdk.android.Fabric;
-import retrofit.http.DELETE;
 
 import static com.scu.jenny.enamecard.storage.User.*;
 
@@ -83,9 +73,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         context = getApplicationContext();
 
         profileView = (CircleImageView) findViewById(R.id.profileIV);
-        if (CurrentUser.getCurrentUser().imageURL != null) {
-            DrawableManager.getInstance().fetchDrawableOnThread(CurrentUser.getCurrentUser().imageURL, profileView);
-        }
+        loadProfileImage();
         profileView.setOnClickListener(getProfileViewOnClickListener());
 
         slideToUnlock = (SlideToUnlock) findViewById(R.id.slidetounlock);
@@ -119,6 +107,17 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                     break;
             }
         }
+    }
+
+    private void loadProfileImage() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (CurrentUser.getCurrentUser().imageURL != null) {
+                    DrawableManager.getInstance().fetchDrawableOnThread(CurrentUser.getCurrentUser().imageURL, profileView);
+                }
+            }
+        });
     }
 
     private void reloadGridView() {
@@ -199,31 +198,52 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
                 GridView gridView = new GridView(MyProfileActivity.this);
 
-                if (CurrentUser.getCurrentUser().socialMediaList == null || CurrentUser.getCurrentUser().socialMediaList.size() == 0) {
+                if (CurrentUser.getCurrentUser().socialMedias == null || CurrentUser.getCurrentUser().socialMedias.size() == 0) {
                     Toast.makeText(MyProfileActivity.this, "You haven't linked any social account yet", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 final List<String> imageURLs = new ArrayList<>();
-                for (int i = 0; i < CurrentUser.getCurrentUser().socialMediaList.size(); i++) {
-                    SocialMedia socialMedia = CurrentUser.getCurrentUser().socialMediaList.get(i);
+                for (int i = 0; i < CurrentUser.getCurrentUser().socialMedias.size(); i++) {
+                    SocialMedia socialMedia = CurrentUser.getCurrentUser().socialMedias.get(i);
                     imageURLs.add(socialMedia.imageURL);
                 }
 
-                gridView.setAdapter(new ProfileImageAdapter(context, R.layout.profile_image_layout, imageURLs));
-                gridView.setNumColumns(3);
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MyProfileActivity.this)
+                        .setView(gridView)
+                        .setTitle("Choose Profile Image").show();
+
+                AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                        String newImageURL = imageURLs.get(position);
+                        if (CurrentUser.getCurrentUser().imageURL == null || !CurrentUser.getCurrentUser().imageURL.equals(newImageURL)) {
+                            CurrentUser.getCurrentUser().imageURL = newImageURL;
+                            new NetworkAsyncTask(MyProfileActivity.this, "Updating Profile Image", new ProcessResponse() {
+                                @Override
+                                public void process(String jsonRespose) {
+                                    try {
+                                        JSONObject userJsonObj = new JSONObject(jsonRespose);
+                                        User newUser = User.getUserFromJsonObj(userJsonObj);
+                                        DBHelper.getInstance().updateOrCreateUserRecord(newUser);
+                                        loadProfileImage();
+                                        alertDialog.dismiss();
+                                    } catch (JSONException e) {
+                                        Toast.makeText(MyProfileActivity.this, "Error from server", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).execute("PUT", "/user", CurrentUser.getCurrentUser().toJson().toString());
+                        }
                     }
-                });
+                };
 
 
-                new AlertDialog.Builder(MyProfileActivity.this)
-                        .setView(gridView)
-                        .setTitle("Choose Profile Image")
-                        .show();
+                gridView.setAdapter(new ProfileImageAdapter(context, R.layout.profile_image_layout, imageURLs));
+                gridView.setNumColumns(3);
+                gridView.setOnItemClickListener(listener);
+
+
+
             }
         };
     }
