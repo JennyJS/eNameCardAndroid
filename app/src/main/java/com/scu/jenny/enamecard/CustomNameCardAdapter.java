@@ -16,10 +16,10 @@ import java.util.List;
 /**
  * Created by jenny on 2/21/16.
  */
-public class CustomNameCard extends ArrayAdapter {
+public class CustomNameCardAdapter extends ArrayAdapter {
     final private List<Contacts> contactsList;
 
-    public CustomNameCard(Context context, int resource, List<Contacts> contacts){
+    public CustomNameCardAdapter(Context context, int resource, List<Contacts> contacts){
         super(context, resource, contacts);
         this.contactsList = contacts;
     }

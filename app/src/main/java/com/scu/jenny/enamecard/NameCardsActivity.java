@@ -27,6 +27,6 @@ public class NameCardsActivity extends AppCompatActivity {
         contactsList.add(new Contacts("Manhong Ren", "icon_twitter.png"));
         contactsList.add(new Contacts("Zhouying Ren", "icon_linkedin.png"));
         contactsList.add(new Contacts("Archer Li", "icon_facebook.png"));
-        contactsListView.setAdapter(new CustomNameCard(this, R.layout.customized_name_card_row, contactsList));
+        contactsListView.setAdapter(new CustomNameCardAdapter(this, R.layout.customized_name_card_row, contactsList));
     }
 }
