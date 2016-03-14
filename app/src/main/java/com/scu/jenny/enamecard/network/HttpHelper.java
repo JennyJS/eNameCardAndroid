@@ -51,6 +51,10 @@ public class HttpHelper {
         return commendSend("PUT", path, jsonString);
     }
 
+    public static String sendDelete(String path, String jsonString) throws IOException {
+        return commendSend("DELETE", path, jsonString);
+    }
+
     public static String commendSend(String method, String path, String jsonString) throws IOException {
         URL url = new URL (domain + path);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

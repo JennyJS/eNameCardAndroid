@@ -193,12 +193,13 @@ public class DBHelper extends SQLiteOpenHelper{
         return row_id;
     }
 
-    public void createFBRecord(Facebook fb) {
+    public void createFBRecord(User.SocialMedia socialMedia, long userID) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-        values.put(USER_PK_ID, fb.userID);
-        values.put(MEDIA_RECORD_ID, fb.fbId);
-        values.put(IMAGE_URL, fb.imageURL);
+        values.put(USER_PK_ID, userID);
+        values.put(MEDIA_TYPE, socialMedia.mediaType);
+        values.put(MEDIA_RECORD_ID, socialMedia.mediaRecordId);
+        values.put(IMAGE_URL, socialMedia.imageURL);
         db.insert(TABLE_SOCIAL_MEDIA, null, values);
         return;
     }

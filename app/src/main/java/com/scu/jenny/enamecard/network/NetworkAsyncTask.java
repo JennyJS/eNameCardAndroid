@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
+import org.apache.http.protocol.HTTP;
+
 import java.io.IOException;
 
 /**
@@ -51,6 +53,8 @@ public class NetworkAsyncTask extends AsyncTask<String, Integer, Double> {
                     response = HttpHelper.sendPut(params[1], params[2]);
                     break;
                 case "DELETE":
+                    response = HttpHelper.sendDelete(params[1], params[2]);
+                    break;
             }
             if (response != null) {
                 this.callback.process(response);

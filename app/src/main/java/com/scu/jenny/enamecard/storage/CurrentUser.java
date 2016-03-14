@@ -13,6 +13,7 @@ public class CurrentUser {
     }
 
     public static void refreshFromDB(User user) {
+        facebook = null;
         List<User.SocialMedia> socialMedias = user.socialMediaList;
         for (User.SocialMedia socialMedia : socialMedias) {
             if (socialMedia.mediaType.equals("facebook")) {

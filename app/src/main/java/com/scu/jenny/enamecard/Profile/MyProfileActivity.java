@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
+import retrofit.http.DELETE;
 
 import static com.scu.jenny.enamecard.storage.User.*;
 
@@ -213,8 +214,30 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //delete facebook record
+                new NetworkAsyncTask(MyProfileActivity.this, "Unlinking on server", new ProcessResponse() {
+                    @Override
+                    public void process(String jsonRespose) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(jsonRespose);
+                            User user = User.getUserFromJsonObj(jsonObject);
+                            DBHelper.getInstance().updateOrCreateUserRecord(user);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    reloadGridView();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MyProfileActivity.this, "Server error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                }).execute("DELETE", "/user/socialMedia", CurrentUser.getFacebook().toJsonObj().toString());
                 DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
-                reloadGridView();
                 Toast.makeText(context, "Unlinked Facebook account", Toast.LENGTH_SHORT).show();
             }
         });
@@ -244,17 +267,21 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                                 try {
                                     final String fbID = json.getString("id");
                                     final String imageURL = "https://graph.facebook.com/" + fbID + "/picture?type=large";
-                                    final Facebook fb = new Facebook(KVStore.getCurrentUserPK(), fbID, imageURL);
+                                    final SocialMedia fb = new SocialMedia("facebook", fbID, imageURL);
                                     new NetworkAsyncTask(MyProfileActivity.this, "Setting up FB", new ProcessResponse() {
                                         @Override
                                         public void process(String jsonRespose) {
                                             try {
                                                 JSONObject jsonObject = new JSONObject(jsonRespose);
-                                                if (jsonObject.has("phoneNumber")) {
-                                                    DBHelper.getInstance().createFBRecord(fb);
-                                                    Toast.makeText(context, "Linked Facebook account", Toast.LENGTH_SHORT).show();
-                                                    reloadGridView();
-                                                }
+                                                User user = User.getUserFromJsonObj(jsonObject);
+                                                DBHelper.getInstance().updateOrCreateUserRecord(user);
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Toast.makeText(context, "Linked Facebook account", Toast.LENGTH_SHORT).show();
+                                                        reloadGridView();
+                                                    }
+                                                });
                                             } catch (JSONException e) {
                                                 Toast.makeText(MyProfileActivity.this, "Record may already exist", Toast.LENGTH_SHORT).show();
                                             }

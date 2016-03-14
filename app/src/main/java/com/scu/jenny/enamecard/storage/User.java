@@ -36,6 +36,18 @@ public class User {
             this.mediaRecordId = mediaRecordId;
             this.imageURL = imageURL;
         }
+
+        public JSONObject toJsonObj() {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("imageURL", imageURL);
+                jsonObject.put("mediaType", mediaType);
+                jsonObject.put("mediaRecordId", mediaRecordId);
+            } catch (JSONException e) {
+                return null;
+            }
+            return jsonObject;
+        }
     }
 
     public static User getUserFromJsonObj(JSONObject jsonObject) throws JSONException {
