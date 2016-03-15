@@ -22,6 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         style="?android:attr/tabWidgetStyle"
+        android:inputType="textCapSentences"
         />
 </RelativeLayout>
 

@@ -363,4 +363,8 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
             Log.d("Error", error.toString());
         }
     }
+    @Override
+    public void onBackPressed() {
+        System.out.println("Disable back button");
+    }
 }

@@ -38,6 +38,7 @@ public class LogInActivity extends AppCompatActivity {
     LinearLayout phoneNumberLayout;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,13 @@ public class LogInActivity extends AppCompatActivity {
         thisActivity = this;
         DBHelper dbHelper = DBHelper.getInstance();
         getApplicationContext().deleteDatabase(dbHelper.getDatabaseName());
+
         setContentView(R.layout.activity_log_in);
+        this.loginViewLayout = (LinearLayout) findViewById(R.id.login_view_layout);
+        this.verificationCodeLayout = (LinearLayout) findViewById(R.id.verification_code_layout);
+        this.phoneNumberLayout = (LinearLayout) findViewById(R.id.phone_number_layout);
+
+
 
         logInBtn = (Button) findViewById(R.id.btn_enter_logIn);
         getVerificationCodeBtn = (Button) findViewById(R.id.button);
@@ -54,10 +61,6 @@ public class LogInActivity extends AppCompatActivity {
 
         phoneNumberEditText = (EditText) findViewById(R.id.phone_number_edit_text);
         verificationCodeEditText = (EditText) findViewById(R.id.verfication_code_edit_text);
-
-        this.loginViewLayout = (LinearLayout) findViewById(R.id.login_view_layout);
-        this.verificationCodeLayout = (LinearLayout) findViewById(R.id.verification_code_layout);
-        this.phoneNumberLayout = (LinearLayout) findViewById(R.id.phone_number_layout);
 
         moveViewDown(200);
 

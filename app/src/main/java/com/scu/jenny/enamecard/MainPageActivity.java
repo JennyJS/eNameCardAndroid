@@ -112,4 +112,5 @@ public class MainPageActivity extends TabActivity  {
         spec.setContent(intent);
         tabHost.addTab(spec);
     }
+
 }
