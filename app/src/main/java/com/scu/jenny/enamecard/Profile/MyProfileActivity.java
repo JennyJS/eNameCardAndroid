@@ -20,7 +20,6 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.scu.jenny.enamecard.LogInActivity;
-import com.scu.jenny.enamecard.MainPageActivity;
 import com.scu.jenny.enamecard.R;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
@@ -113,8 +112,8 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (CurrentUser.getCurrentUser().imageURL != null) {
-                    DrawableManager.getInstance().fetchDrawableOnThread(CurrentUser.getCurrentUser().imageURL, profileView);
+                if (CurrentUser.get().imageURL != null) {
+                    DrawableManager.getInstance().fetchDrawableOnThread(CurrentUser.get().imageURL, profileView);
                 }
             }
         });
@@ -198,14 +197,14 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
                 GridView gridView = new GridView(MyProfileActivity.this);
 
-                if (CurrentUser.getCurrentUser().socialMedias == null || CurrentUser.getCurrentUser().socialMedias.size() == 0) {
+                if (CurrentUser.get().socialMedias == null || CurrentUser.get().socialMedias.size() == 0) {
                     Toast.makeText(MyProfileActivity.this, "You haven't linked any social account yet", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 final List<String> imageURLs = new ArrayList<>();
-                for (int i = 0; i < CurrentUser.getCurrentUser().socialMedias.size(); i++) {
-                    SocialMedia socialMedia = CurrentUser.getCurrentUser().socialMedias.get(i);
+                for (int i = 0; i < CurrentUser.get().socialMedias.size(); i++) {
+                    SocialMedia socialMedia = CurrentUser.get().socialMedias.get(i);
                     imageURLs.add(socialMedia.imageURL);
                 }
 
@@ -217,8 +216,8 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String newImageURL = imageURLs.get(position);
-                        if (CurrentUser.getCurrentUser().imageURL == null || !CurrentUser.getCurrentUser().imageURL.equals(newImageURL)) {
-                            CurrentUser.getCurrentUser().imageURL = newImageURL;
+                        if (CurrentUser.get().imageURL == null || !CurrentUser.get().imageURL.equals(newImageURL)) {
+                            CurrentUser.get().imageURL = newImageURL;
                             new NetworkAsyncTask(MyProfileActivity.this, "Updating Profile Image", new ProcessResponse() {
                                 @Override
                                 public void process(String jsonRespose) {
@@ -232,7 +231,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                                         Toast.makeText(MyProfileActivity.this, "Error from server", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            }).execute("PUT", "/user", CurrentUser.getCurrentUser().toJson().toString());
+                            }).execute("PUT", "/user", CurrentUser.get().toJson().toString());
                         }
                     }
                 };

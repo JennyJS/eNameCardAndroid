@@ -38,4 +38,5 @@ dependencies {
     }
     compile files('libs/zxing-2.1.jar')
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
 }

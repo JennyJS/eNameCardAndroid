@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Created by jenny on 2/28/16.
  */
 public class HttpHelper {
-    private static final String domain = "http://enamecard-jennyjs.rhcloud.com";
+    public static final String domain = "http://enamecard-jennyjs.rhcloud.com";
     private static final int TIME_OUT = 5000;
 
     public static String sendGet(String path) throws IOException {

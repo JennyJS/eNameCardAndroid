@@ -13,7 +13,7 @@ public class CurrentUser {
         return facebook;
     }
 
-    public static User getCurrentUser() { return currentUser; }
+    public static User get() { return currentUser; }
 
     public static void refreshFromDB(User user) {
         facebook = null;
