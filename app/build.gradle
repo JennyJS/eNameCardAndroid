@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -36,7 +37,9 @@ dependencies {
     android {
         useLibrary 'org.apache.http.legacy'
     }
-    compile files('libs/zxing-2.1.jar')
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    compile 'com.google.zxing:core:3.2.1'
+    compile 'com.android.support:appcompat-v7:23.1.0'   // Version 23+ is required
 }
