@@ -19,6 +19,15 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.linkedin.platform.APIHelper;
+import com.linkedin.platform.LISession;
+import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.errors.LIAuthError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
+import com.linkedin.platform.listeners.AuthListener;
+import com.linkedin.platform.utils.Scope;
 import com.scu.jenny.enamecard.LogInActivity;
 import com.scu.jenny.enamecard.R;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
@@ -102,11 +111,15 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                 case TWITTER:
                     twitterAuthClient.onActivityResult(requestCode, resultCode, data);
                     break;
+                case LINKEDIN:
+                    LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+                    break;
                 default:
                     break;
             }
         }
     }
+
 
     private void loadProfileImage() {
         runOnUiThread(new Runnable() {
@@ -148,7 +161,24 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
             }));
         }
 
-        connectionList.add(new AdapterConnector(MediaType.LINKEDIN, null, null));
+        final SocialMedia lI = CurrentUser.getLinkedIn();
+        if(CurrentUser.getLinkedIn() != null){
+            connectionList.add(new AdapterConnector(MediaType.LINKEDIN, lI.imageURL, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //change to FB
+                    onFbLogout();
+                }
+            }));
+        } else {
+            connectionList.add(new AdapterConnector(MediaType.LINKEDIN, null, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onLinkedInLogIn();
+                }
+            }));
+        }
+
 
         gridView.setAdapter(new GridViewAdapter(this, R.layout.grid_item_layout, connectionList));
 
@@ -366,4 +396,58 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     public void onBackPressed() {
         System.out.println("Disable back button");
     }
+
+    /**********************************************************/
+    /*************** LinkedIn Login / Logout CallBack *********/
+    /**********************************************************/
+
+    // CLient ID: 75o2r7dstes1g6   Client Secret: vr0pnEmuhqUQBByK
+
+    public void onLinkedInLogIn(){
+        this.mediaType = MediaType.LINKEDIN;
+        LISessionManager sessionManager = LISessionManager.getInstance(context);
+        LISession session = sessionManager.getSession();
+        boolean accessTokenValid = session.isValid();
+
+        if (accessTokenValid) {
+            getProfile();
+        } else {
+            LISessionManager.getInstance(context).init(
+                    MyProfileActivity.this,
+                    Scope.build(Scope.R_BASICPROFILE, Scope.W_SHARE),
+                    new AuthListener() {
+                        @Override
+                        public void onAuthSuccess() {
+                            System.out.println("onAuthSuccess");
+                            getProfile();
+                        }
+                        @Override
+                        public void onAuthError(LIAuthError error) {
+                            System.out.print("Linkedin failed: " + error.toString());
+                        }
+                    },
+                    true
+            );
+        }
+    }
+
+    public void getProfile() {
+        APIHelper apiHelper = APIHelper.getInstance(context);
+        apiHelper.getRequest(context, "https://api.linkedin.com/v1/people/~:(first-name,last-name,public-profile-url)", new ApiListener() {
+            @Override
+            public void onApiSuccess(ApiResponse s) {
+                System.out.println("get linked api reponse" + s.getResponseDataAsString());
+            }
+
+            @Override
+            public void onApiError(LIApiError error) {
+                System.out.println("Error...");
+            }
+        });
+
+    }
+
+
+
+
 }

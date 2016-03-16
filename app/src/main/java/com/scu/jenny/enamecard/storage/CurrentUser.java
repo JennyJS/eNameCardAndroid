@@ -8,10 +8,15 @@ import java.util.List;
 public class CurrentUser {
     private static User currentUser;
     private static User.SocialMedia facebook;
+    private static User.SocialMedia linkedIn;
 
     public static User.SocialMedia getFacebook() {
         return facebook;
     }
+    public static User.SocialMedia getLinkedIn() {
+        return linkedIn;
+    }
+
 
     public static User get() { return currentUser; }
 
@@ -23,6 +28,8 @@ public class CurrentUser {
         for (User.SocialMedia socialMedia : socialMedias) {
             if (socialMedia.mediaType.equals("facebook")) {
                 facebook = socialMedia;
+            } else if (socialMedia.mediaType.equals("linkedIn")){
+                linkedIn = socialMedia;
             }
         }
     }
