@@ -101,7 +101,8 @@ public class WelcomeActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
+                        startActivity(intent);
                     }
                 }
             }).execute("GET", "/user");
