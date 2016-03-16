@@ -30,6 +30,7 @@ import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
 import com.scu.jenny.enamecard.LogInActivity;
 import com.scu.jenny.enamecard.R;
+import com.scu.jenny.enamecard.WelcomeActivity;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.storage.CurrentUser;
@@ -95,7 +96,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     public void onUnlock() {
         Toast.makeText(MyProfileActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
         KVStore.getInstance().set("secret", null);
-        Intent intent = new Intent(MyProfileActivity.this, LogInActivity.class);
+        Intent intent = new Intent(MyProfileActivity.this, WelcomeActivity.class);
         startActivity(intent);
     }
 
