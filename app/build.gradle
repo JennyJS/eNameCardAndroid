@@ -18,6 +18,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
 }
 
 repositories {
@@ -44,3 +49,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.0'   // Version 23+ is required
     compile project(':linkedin-sdk')
 }
+

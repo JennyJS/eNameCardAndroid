@@ -91,7 +91,7 @@ public class MainPageActivity extends TabActivity  {
 
     private void setTabs() {
         addTab("Profile", R.drawable.profile, MyProfileActivity.class);
-        addTab("Cards", R.drawable.cards, Contacts.class);
+        addTab("Cards", R.drawable.cards, NameCardsActivity.class);
 
         addTab("Scan", R.drawable.scan, ScanActivity.class);
         addTab("QR Code", R.drawable.qr, QRActivity.class);

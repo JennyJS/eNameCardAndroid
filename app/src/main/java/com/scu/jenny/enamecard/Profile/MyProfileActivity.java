@@ -84,7 +84,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         profileView = (CircleImageView) findViewById(R.id.profileIV);
 
         // for move on purpose
-//        loadProfileImage();
+        loadProfileImage();
         profileView.setOnClickListener(getProfileViewOnClickListener());
 
         slideToUnlock = (SlideToUnlock) findViewById(R.id.slidetounlock);

@@ -1,6 +1,10 @@
 package com.scu.jenny.enamecard;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,20 +40,28 @@ public class CustomNameCardAdapter extends ArrayAdapter {
         ImageView imageView = (ImageView) row.findViewById(R.id.contactMethod);
         ImageView imageView2 = (ImageView) row.findViewById(R.id.contactMethod2);
 
-        try {
-            InputStream inputStream = getContext().getAssets().open(contacts.getIconName());
-            Drawable drawable = Drawable.createFromStream(inputStream, null);
-            imageView.setImageDrawable(drawable);
+        // using bitmap to solve out of memory issue, however, leaving fileNotFound to fix
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+        Bitmap myBitmap = BitmapFactory.decodeFile(contacts.getIconName(),options);
+        Drawable d = new BitmapDrawable(Resources.getSystem(),myBitmap);
+        imageView.setImageDrawable(d);
+        textView.setText(contacts.getPersonName());
 
-            inputStream = getContext().getAssets().open(contacts.getIconName());
-            drawable = Drawable.createFromStream(inputStream, null);
-            imageView2.setImageDrawable(drawable);
-
-            textView.setText(contacts.getPersonName());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            InputStream inputStream = getContext().getAssets().open(contacts.getIconName());
+//            Drawable drawable = Drawable.createFromStream(inputStream, null);
+//            imageView.setImageDrawable(drawable);
+//
+//            inputStream = getContext().getAssets().open(contacts.getIconName());
+//            drawable = Drawable.createFromStream(inputStream, null);
+//            imageView2.setImageDrawable(drawable);
+//
+//            textView.setText(contacts.getPersonName());
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         return row;
     }
