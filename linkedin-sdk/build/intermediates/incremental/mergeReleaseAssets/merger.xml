@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/manhong/JAVA_WORKSPACE/enamecard-android/linkedin-sdk/src/main/assets"/></dataSet><dataSet config="release"><source path="/Users/manhong/JAVA_WORKSPACE/enamecard-android/linkedin-sdk/src/release/assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/jenny/AndroidStudioProjects/eNameCard/linkedin-sdk/src/main/assets"/></dataSet><dataSet config="release"><source path="/Users/jenny/AndroidStudioProjects/eNameCard/linkedin-sdk/src/release/assets"/></dataSet></merger>

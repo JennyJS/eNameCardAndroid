@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/jenny/AndroidStudioProjects/eNameCard/linkedin-sdk/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_launcher.png",
+        "source": "/Users/jenny/AndroidStudioProjects/eNameCard/linkedin-sdk/src/main/res/drawable-xhdpi/ic_launcher.png"
+    },
+    {
         "merged": "/Users/manhong/JAVA_WORKSPACE/enamecard-android/linkedin-sdk/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_launcher.png",
         "source": "/Users/manhong/JAVA_WORKSPACE/enamecard-android/linkedin-sdk/src/main/res/drawable-xhdpi/ic_launcher.png"
     }

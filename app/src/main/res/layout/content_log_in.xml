@@ -23,12 +23,19 @@
         android:orientation="vertical"
         android:id="@+id/phone_number_layout"
         >
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/logo"
+            android:src="@drawable/logo"
+            android:layout_gravity="center_horizontal"
+            />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Log in with your phone number"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="50dp"
             android:textColor="@color/archerGray"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -42,8 +49,7 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/phone_number_edit_text"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="37dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_horizontal" />
 
         <Button
@@ -53,7 +59,8 @@
             android:text="Get Verification Code"
             android:textColor="@color/brightText"
             android:id="@+id/button"
-            android:background="@drawable/mybutton" />
+            android:background="@drawable/mybutton"
+            android:layout_marginTop="10dp"/>
 
         </LinearLayout>
 

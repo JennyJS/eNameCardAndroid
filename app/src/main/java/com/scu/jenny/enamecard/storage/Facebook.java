@@ -15,7 +15,7 @@ public class Facebook {
 
     public Facebook(long userID, String fbId, String imageURL) {
         if (imageURL.equals("photoPath") || imageURL.equals("url")) {
-            throw new IllegalArgumentException("FUCKKKKKKKKKKKK" + imageURL);
+            throw new IllegalArgumentException("HIIIIIII" + imageURL);
         }
         this.userID = userID;
         this.fbId = fbId;

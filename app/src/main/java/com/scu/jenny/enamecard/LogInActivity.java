@@ -62,13 +62,13 @@ public class LogInActivity extends AppCompatActivity {
         phoneNumberEditText = (EditText) findViewById(R.id.phone_number_edit_text);
         verificationCodeEditText = (EditText) findViewById(R.id.verfication_code_edit_text);
 
-        moveViewDown(200);
+        moveViewDown(300);
 
         getVerificationCodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (phoneNumberEditText.getText().toString().equals("123")) {
-                    Intent intent = new Intent(getApplicationContext(), UserNameActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                     startActivity(intent);
                 } else {
                     requestVerificationCode();
