@@ -187,7 +187,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
             }));
         }
 
-
+        connectionList.add(new AdapterConnector(MediaType.ADD, null, null));
         gridView.setAdapter(new GridViewAdapter(this, R.layout.grid_item_layout, connectionList));
     }
 

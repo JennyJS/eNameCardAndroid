@@ -31,22 +31,29 @@ public class GridViewAdapter extends ArrayAdapter {
         this.data = connectors;
     }
 
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final AdapterConnector connection = data.get(position);
-
+//        System.out.println(data.size());
         View row = null;
         if (convertView != null) {
             row = convertView;
         } else {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if(position == data.size() -1){
+
+                row = inflater.inflate(R.layout.last_grid_view, null);
+                GradientDrawable bgShape = (GradientDrawable)row.getBackground();
+                bgShape.setColor(adjustAlpha(Color.parseColor(connection.mediaType.color), 0.7f));
+                return row;
+            }
             row = inflater.inflate(R.layout.grid_item_layout, null);
         }
 
         GradientDrawable bgShape = (GradientDrawable)row.getBackground();
         bgShape.setColor(adjustAlpha(Color.parseColor(connection.mediaType.color), 0.7f));
-
-
 
         try {
             ImageView socialMediaIV = (ImageView) row.findViewById(R.id.socialMediaIV);
