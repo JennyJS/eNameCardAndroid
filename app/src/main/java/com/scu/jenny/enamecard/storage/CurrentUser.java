@@ -10,6 +10,7 @@ public class CurrentUser {
     private static User.SocialMedia facebook;
     private static User.SocialMedia linkedIn;
 
+
     public static User.SocialMedia getFacebook() {
         return facebook;
     }
@@ -19,6 +20,10 @@ public class CurrentUser {
 
 
     public static User get() { return currentUser; }
+
+    public static String getUserFirstName(){
+        return currentUser.firstName;
+    }
 
     public static void refreshFromDB(User user) {
         facebook = null;

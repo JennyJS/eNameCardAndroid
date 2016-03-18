@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.google.zxing.BarcodeFormat;
@@ -14,6 +15,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.scu.jenny.enamecard.network.SocketManager;
 import com.scu.jenny.enamecard.storage.CurrentUser;
+import com.scu.jenny.enamecard.storage.DrawableManager;
 import com.scu.jenny.enamecard.storage.KVStore;
 
 import org.json.JSONException;
@@ -24,10 +26,29 @@ public class QRActivity extends AppCompatActivity {
     ProgressDialog progress;
 
     ImageView qrImage;
+    ImageView profileImage;
+    TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr);
+
+        textView = (TextView) findViewById(R.id.qr_text_view);
+        profileImage = (ImageView) findViewById(R.id.qr_profile_image);
+        textView.setText(CurrentUser.getUserFirstName() + "'s QR code");
+        loadProfileImage();
+
+    }
+
+    private void loadProfileImage() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (CurrentUser.get().imageURL != null) {
+                    DrawableManager.getInstance().fetchDrawableOnThread(CurrentUser.get().imageURL, profileImage);
+                }
+            }
+        });
     }
 
     @Override
