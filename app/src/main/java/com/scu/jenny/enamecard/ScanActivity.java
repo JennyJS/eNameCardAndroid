@@ -41,24 +41,32 @@ public class ScanActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         System.out.println("QR content:" + scanResult.getContents());
+        final String qrToken = scanResult.getContents();
+        JSONObject reqBody = new JSONObject();
         try {
-            final JSONObject jsonObject = new JSONObject(scanResult.getContents());
-            if (jsonObject.has("type") && jsonObject.get("type").equals("qrToken") && jsonObject.has("data")) {
-                String qrToken = jsonObject.getString("data");
-                JSONObject reqBody = new JSONObject();
-                reqBody.put("qrToken", qrToken);
-                new NetworkAsyncTask(ScanActivity.this, "Adding friend...", new ProcessResponse() {
-                    @Override
-                    public void process(String jsonRespose) {
-                        try {
-                            JSONObject res = new JSONObject(jsonRespose);
-                            Toast.makeText(ScanActivity.this, "Request sent to " + res.getString("firstName"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            Toast.makeText(ScanActivity.this, "Cannot parse server repsonse", Toast.LENGTH_SHORT).show();
-                        }
+            reqBody.put("qrToken", qrToken);
+            new NetworkAsyncTask(ScanActivity.this, "Adding friend...", new ProcessResponse() {
+                @Override
+                public void process(String jsonRespose) {
+                    try {
+                        final JSONObject res = new JSONObject(jsonRespose);
+                        final String firstName = res.getString("firstName");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ScanActivity.this, "Request sent to " + firstName, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ScanActivity.this, "Cannot parse server repsonse", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                }).execute("POST", "/request-share", reqBody.toString());
-            }
+                }
+            }).execute("POST", "/request-share", reqBody.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

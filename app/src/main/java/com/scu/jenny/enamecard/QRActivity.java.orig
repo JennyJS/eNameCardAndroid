@@ -8,14 +8,18 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+<<<<<<< 353ef02b49313de9b87ec0fa608b5a1518af3eb4
 import android.widget.TextView;
+=======
 import android.widget.Toast;
+>>>>>>> Scanning QR code is working
 
 import com.github.nkzawa.emitter.Emitter;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.scu.jenny.enamecard.Profile.MyProfileActivity;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.network.SocketManager;
