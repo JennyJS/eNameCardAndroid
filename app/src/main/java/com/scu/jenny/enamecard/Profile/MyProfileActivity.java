@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -67,7 +68,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
     private CircleImageView profileView;
     private SlideToUnlock slideToUnlock;
-    private Context context;
+    public static Context context;
 
     //    private ListView myListView;
     private GridView gridView;
@@ -135,6 +136,10 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         });
     }
 
+    /**********************************************************/
+    /********************** UI Rendering **********************/
+    /**********************************************************/
+
     private void reloadGridView() {
         gridView.invalidateViews();
         final ArrayList<AdapterConnector> connectionList = new ArrayList<>();
@@ -184,7 +189,16 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
 
         gridView.setAdapter(new GridViewAdapter(this, R.layout.grid_item_layout, connectionList));
+    }
 
+
+    private void flipViewflipView(ViewFlipper flipper) {
+        if(flipper.getDisplayedChild() == 0){
+            flipper.setDisplayedChild(1);
+        }
+        else{
+            flipper.setDisplayedChild(0);
+        }
     }
 
 //

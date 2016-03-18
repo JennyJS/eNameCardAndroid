@@ -4,12 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ViewFlipper;
 
 import com.scu.jenny.enamecard.R;
 import com.scu.jenny.enamecard.storage.DrawableManager;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
  */
 public class GridViewAdapter extends ArrayAdapter {
     private final ArrayList<AdapterConnector> data;
+    private static final int DISPLAYED = 1;
 
     public GridViewAdapter(Context context, int layoutResourceId, ArrayList<AdapterConnector> connectors) {
         super(context, layoutResourceId, connectors);
@@ -44,31 +46,57 @@ public class GridViewAdapter extends ArrayAdapter {
         GradientDrawable bgShape = (GradientDrawable)row.getBackground();
         bgShape.setColor(adjustAlpha(Color.parseColor(connection.mediaType.color), 0.7f));
 
-        ImageView socialMediaIV = (ImageView) row.findViewById(R.id.socialMediaIV);
-        ImageView unlinkedIV = (ImageView) row.findViewById(R.id.unlinkedIV);
-        ImageView linkedIV = (ImageView) row.findViewById(R.id.linkedIV);
+
 
         try {
+            ImageView socialMediaIV = (ImageView) row.findViewById(R.id.socialMediaIV);
+
+            ViewFlipper viewFlipper = (ViewFlipper) row.findViewById(R.id.grid_view_flipper);
+
+            ImageView unlinkedIV = (ImageView) row.findViewById(R.id.unlinkedIV);
+            ImageView linkedIV = (ImageView) row.findViewById(R.id.linkedIV);
+
             InputStream inputStream = getContext().getAssets().open(connection.mediaType.iconName);
             Drawable drawable = Drawable.createFromStream(inputStream, null);
             socialMediaIV.setImageDrawable(drawable);
 
+
             if (connection.url == null) {
+                // Show unlinked view
                 inputStream = getContext().getAssets().open("link_icon_word.png");
                 drawable = Drawable.createFromStream(inputStream, null);
                 unlinkedIV.setImageDrawable(drawable);
-                linkedIV.setVisibility(View.GONE);
                 unlinkedIV.setOnClickListener(connection.listener);
+
+                if (viewFlipper.getDisplayedChild() == 1) {
+                    viewFlipper.setInAnimation(MyProfileActivity.context, R.anim.in_from_right);
+                    viewFlipper.setOutAnimation(MyProfileActivity.context, R.anim.out_to_left);
+                    viewFlipper.showPrevious();
+                } else {
+                    viewFlipper.setDisplayedChild(0);
+                }
             } else {
-                unlinkedIV.setVisibility(View.GONE);
+                // Show linked view
                 DrawableManager.getInstance().fetchDrawableOnThread(connection.url, linkedIV);
                 linkedIV.setOnClickListener(connection.listener);
+
+                if (viewFlipper.getDisplayedChild() == 0) {
+                    viewFlipper.setInAnimation(MyProfileActivity.context, R.anim.in_from_left);
+                    viewFlipper.setOutAnimation(MyProfileActivity.context, R.anim.out_to_right);
+                    viewFlipper.showNext();
+                } else {
+                    viewFlipper.setDisplayedChild(1);
+                }
+
+
             }
 
-
+            System.out.println("after changing... position:" + position + " fliperViewIndex:" + viewFlipper.getDisplayedChild());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
         return row;
     }
