@@ -97,19 +97,30 @@ public class QRActivity extends AppCompatActivity {
                         }
                     } else if (type.equals("shareRequest")) {
                         JSONObject reqUserJson = new JSONObject(data);
-                        User reqUser = User.getUserFromJsonObj(reqUserJson);
+                        final User reqUser = User.getUserFromJsonObj(reqUserJson);
                         final AlertDialog.Builder builder = new AlertDialog.Builder(QRActivity.this);
                         builder.setMessage(reqUser.firstName + " requests your name card" + ". Accept?");
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // Send server that invitation is accepted
-                                new NetworkAsyncTask(QRActivity.this, "Accepting Invitation", new ProcessResponse() {
-                                    @Override
-                                    public void process(String jsonRespose) {
-                                        Toast.makeText(QRActivity.this, "Accepted", Toast.LENGTH_LONG).show();
-                                    }
-                                });
+                                JSONObject reqJson = new JSONObject();
+                                try {
+                                    reqJson.put("phoneNumber", reqUser.phoneNumber);
+                                    new NetworkAsyncTask(QRActivity.this, "Accepting Invitation", new ProcessResponse() {
+                                        @Override
+                                        public void process(String jsonRespose) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+
+                                                }
+                                            });
+                                        }
+                                    }).execute("PUT", "/accept-share", reqJson.toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
                         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
