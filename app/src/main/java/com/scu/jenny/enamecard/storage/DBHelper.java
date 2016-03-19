@@ -121,8 +121,7 @@ public class DBHelper extends SQLiteOpenHelper{
         final long id = cursor.getLong(0);
         final String firstName = cursor.getString(1);
         final String lastName = cursor.getString(2);
-        phoneNumber = cursor.getColumnName(3);
-        final String imageURL = cursor.getColumnName(4);
+        final String imageURL = cursor.getString(4);
 
         List<User.SocialMedia> socialMedias = getSocialMediasByUserID(id);
 
@@ -169,6 +168,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(PHONE_NUMBER, user.phoneNumber);
         values.put(FIRST_NAME, user.firstName );
         values.put(LAST_NAME, user.lastName);
+        values.put(IMAGE_URL, user.imageURL);
         long row_id;
 
         if (old == null) {
