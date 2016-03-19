@@ -117,7 +117,7 @@ public class QRActivity extends AppCompatActivity {
                                                 }
                                             });
                                         }
-                                    }).execute("PUT", "/accept-share", reqJson.toString());
+                                    }).execute("POST", "/accept-share", reqJson.toString());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

@@ -4,6 +4,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.scu.jenny.enamecard.network.NetworkAsyncTask;
+import com.scu.jenny.enamecard.network.ProcessResponse;
+import com.scu.jenny.enamecard.storage.DBHelper;
+import com.scu.jenny.enamecard.storage.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,20 +22,38 @@ public class NameCardsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name_cards);
-
-//        myListView = (ListView)findViewById(R.id.list_view);
-//        final List<AdapterConnector> connectionList = new ArrayList<>();
-//        connectionList.add(new AdapterConnector("icon_qora.png", "icon_add.png"));
-//        connectionList.add(new AdapterConnector("icon_twitter.png", "icon_add.png"));
-//        connectionList.add(new AdapterConnector("icon_facebook.png", "icon_add.png"));
-//        connectionList.add(new AdapterConnector("icon_linkedin.png", "icon_add.png"));
-//
-//        myListView.setAdapter(new CustomAdapter(this, R.layout.customized_row, connectionList));
         contactsListView = (ListView) findViewById(R.id.myCardsListView);
-        List<Contacts> contactsList = new ArrayList<>();
-        contactsList.add(new Contacts("Manhong Ren", "icon_twitter.png"));
-        contactsList.add(new Contacts("Zhouying Ren", "icon_linkedin.png"));
-        contactsList.add(new Contacts("Archer Li", "icon_facebook.png"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateListView();
+    }
+
+
+    private void updateListView() {
+        contactsListView.invalidateViews();
+        final List<User> contactsList = new ArrayList<>();
         contactsListView.setAdapter(new CustomNameCardAdapter(this, R.layout.customized_name_card_row, contactsList));
+
+        new NetworkAsyncTask(NameCardsActivity.this, "Fetching name cards", new ProcessResponse() {
+            @Override
+            public void process(String jsonRespose) {
+                try {
+                    JSONObject jsonObject = new JSONObject(jsonRespose);
+                    JSONArray nameCards = jsonObject.getJSONArray("nameCards");
+                    List<User> contacts = new ArrayList<>();
+                    for (int i = 0; i < nameCards.length(); i++) {
+                        User user = User.getUserFromJsonObj(nameCards.getJSONObject(i));
+                        DBHelper.getInstance().updateOrCreateUserRecord(user);
+                        contacts.add(user);
+                    }
+                    contactsListView.setAdapter(new CustomNameCardAdapter(NameCardsActivity.this, R.layout.customized_name_card_row, contactsList));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).execute("GET", "/name-cards");
     }
 }
