@@ -31,6 +31,8 @@ public class CurrentUser {
 
     public static void refreshFromDB(User user) {
         facebook = null;
+        linkedIn = null;
+        twitter = null;
 
         currentUser = user;
         List<User.SocialMedia> socialMedias = user.socialMedias;

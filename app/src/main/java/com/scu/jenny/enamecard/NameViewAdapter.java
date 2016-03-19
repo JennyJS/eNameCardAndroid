@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +49,14 @@ public class NameViewAdapter extends ArrayAdapter {
         TextView phoneNumberView = (TextView) row.findViewById(R.id.phoneNumber);
         phoneNumberView.setText(user.phoneNumber);
 
+        ImageView[] imageViews = new ImageView[] {
+                (ImageView) row.findViewById(R.id.fbIV),
+                (ImageView) row.findViewById(R.id.twIV)
+        };
+
         for (int i = 0; i < user.socialMedias.size(); i++) {
             final User.SocialMedia socialMedia = user.socialMedias.get(i);
-            ImageView imageView = (ImageView) row.findViewById(R.id.fbIV);
-            DrawableManager.getInstance().fetchDrawableOnThread(socialMedia.imageURL, imageView);
+            DrawableManager.getInstance().fetchDrawableOnThread(socialMedia.imageURL, imageViews[i]);
             break;
         }
 

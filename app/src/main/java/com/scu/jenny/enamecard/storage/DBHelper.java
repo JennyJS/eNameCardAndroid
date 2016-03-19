@@ -206,8 +206,10 @@ public class DBHelper extends SQLiteOpenHelper{
         return;
     }
 
-//    public void deleteFBRecordByUserID(long userID) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.delete(TABLE_SOCIAL_MEDIA, USER_PK_ID + "= ?", new String[]{String.valueOf(userID)});
-//    }
+    public void deleteSocialMediaByUserIDAndType(long userID, String socialMedia) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SOCIAL_MEDIA, USER_PK_ID + "= ? AND " + MEDIA_TYPE + "= ?", new String[]{String.valueOf(userID), socialMedia});
+    }
+
+
 }

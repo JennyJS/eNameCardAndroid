@@ -30,7 +30,6 @@ import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
-import com.scu.jenny.enamecard.LogInActivity;
 import com.scu.jenny.enamecard.R;
 import com.scu.jenny.enamecard.WelcomeActivity;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
@@ -329,7 +328,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                         }
                     }
                 }).execute("DELETE", "/user/socialMedia", CurrentUser.getFacebook().toJsonObj().toString());
-//                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
+                DBHelper.getInstance().deleteSocialMediaByUserIDAndType(KVStore.getCurrentUserPK(), "facebook");
                 Toast.makeText(context, "Unlinked Facebook account", Toast.LENGTH_SHORT).show();
             }
         });
@@ -437,15 +436,11 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                                 }
                             });
                         } catch (JSONException e) {
-//                            Toast.makeText(MyProfileActivity.this, "Record may already exist", Toast.LENGTH_SHORT).show();
                             System.out.println(e.getStackTrace());
                         }
 
                     }
                 }).execute("POST", "/user/socialMedia", tt.toJsonObj().toString());
-
-
-                System.out.println("@@@@@@@@@@@ TwitterID: " + twitterSessionResult.data.getUserId() + " User name : " + twitterSessionResult.data.getUserName() + "@@@@@@@@@@@");
             }
 
             @Override
@@ -487,7 +482,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                         }
                     }
                 }).execute("DELETE", "/user/socialMedia", CurrentUser.getTwitter().toJsonObj().toString());
-//                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
+                DBHelper.getInstance().deleteSocialMediaByUserIDAndType(KVStore.getCurrentUserPK(), "twitter");
                 Toast.makeText(context, "Unlinked Twitter account", Toast.LENGTH_SHORT).show();
             }
         });
