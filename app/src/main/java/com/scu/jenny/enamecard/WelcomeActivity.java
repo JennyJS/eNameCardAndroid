@@ -90,7 +90,6 @@ public class WelcomeActivity extends AppCompatActivity {
                             DBHelper.getInstance().getUserByPhoneNumber(jsonObject.getString("phoneNumber"));
                             KVStore.getInstance().set("userPK", userPK);
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
-                            intent.putExtra(MainPageActivity.userInfoKey, jsonObject.toString());
                             startActivity(intent);
                         } else if (jsonObject.has("phoneNumber")){
                             KVStore.getInstance().set("phoneNumber", jsonObject.getString("phoneNumber"));

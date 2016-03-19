@@ -3,6 +3,7 @@ package com.scu.jenny.enamecard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.google.zxing.client.android.Intents;
@@ -40,35 +41,41 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        System.out.println("QR content:" + scanResult.getContents());
-        final String qrToken = scanResult.getContents();
-        JSONObject reqBody = new JSONObject();
-        try {
-            reqBody.put("qrToken", qrToken);
-            new NetworkAsyncTask(ScanActivity.this, "Adding friend...", new ProcessResponse() {
-                @Override
-                public void process(String jsonRespose) {
-                    try {
-                        final JSONObject res = new JSONObject(jsonRespose);
-                        final String firstName = res.getString("firstName");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(ScanActivity.this, "Request sent to " + firstName, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } catch (JSONException e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(ScanActivity.this, "Cannot parse server repsonse", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+        if (scanResult.getContents() == null) {
+            finish();
+            Intent newIntent = new Intent(ScanActivity.this, MainPageActivity.class);
+            startActivity(newIntent);
+        } else {
+            System.out.println("QR content:" + scanResult.getContents());
+            final String qrToken = scanResult.getContents();
+            JSONObject reqBody = new JSONObject();
+            try {
+                reqBody.put("qrToken", qrToken);
+                new NetworkAsyncTask(ScanActivity.this, "Adding friend...", new ProcessResponse() {
+                    @Override
+                    public void process(String jsonRespose) {
+                        try {
+                            final JSONObject res = new JSONObject(jsonRespose);
+                            final String firstName = res.getString("firstName");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ScanActivity.this, "Request sent to " + firstName, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ScanActivity.this, "Cannot parse server repsonse", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
-                }
-            }).execute("POST", "/request-share", reqBody.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+                }).execute("POST", "/request-share", reqBody.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
