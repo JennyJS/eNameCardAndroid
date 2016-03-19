@@ -5,23 +5,39 @@
     android:orientation="horizontal"
     android:weightSum="1"
     android:layout_marginTop="30dp">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="46dp"
         android:id="@+id/contactName"
-        android:text="Manhong Ren"
         android:layout_weight="0.4"
         android:textSize="25dp" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/contactMethod2"
-        android:src="@drawable/icon_phone_call" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/contactMethod"
-        android:src="@drawable/icon_twitter"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fbIV"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FFFFFFFF"
+        android:clickable="true"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/twIV"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FFFFFFFF"
+        android:clickable="true"
+        android:layout_gravity="center_horizontal"
+        />
 
 </LinearLayout>

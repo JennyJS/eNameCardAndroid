@@ -2,8 +2,10 @@ package com.scu.jenny.enamecard;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.scu.jenny.enamecard.Profile.AdapterConnector;
 import com.scu.jenny.enamecard.network.NetworkAsyncTask;
 import com.scu.jenny.enamecard.network.ProcessResponse;
 import com.scu.jenny.enamecard.storage.DBHelper;
@@ -33,17 +35,13 @@ public class NameCardsActivity extends AppCompatActivity {
 
 
     private void updateListView() {
-        contactsListView.invalidateViews();
-        final List<User> contactsList = new ArrayList<>();
-        contactsListView.setAdapter(new CustomNameCardAdapter(this, R.layout.customized_name_card_row, contactsList));
-
         new NetworkAsyncTask(NameCardsActivity.this, "Fetching name cards", new ProcessResponse() {
             @Override
             public void process(String jsonRespose) {
                 try {
                     JSONObject jsonObject = new JSONObject(jsonRespose);
                     JSONArray nameCards = jsonObject.getJSONArray("nameCards");
-                    List<User> contacts = new ArrayList<>();
+                    final List<User> contacts = new ArrayList<>();
                     for (int i = 0; i < nameCards.length(); i++) {
                         User user = User.getUserFromJsonObj(nameCards.getJSONObject(i));
                         DBHelper.getInstance().updateOrCreateUserRecord(user);
@@ -52,7 +50,9 @@ public class NameCardsActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            contactsListView.setAdapter(new CustomNameCardAdapter(NameCardsActivity.this, R.layout.customized_name_card_row, contactsList));
+                            ArrayAdapter adapter = new NameViewAdapter(NameCardsActivity.this, R.layout.customized_name_card_row, contacts);
+                            adapter.notifyDataSetChanged();
+                            contactsListView.setAdapter(adapter);
                         }
                     });
                 } catch (JSONException e) {

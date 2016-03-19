@@ -23,27 +23,30 @@ import java.util.List;
 /**
  * Created by jenny on 2/21/16.
  */
-public class CustomNameCardAdapter extends ArrayAdapter {
+public class NameViewAdapter extends ArrayAdapter {
     final private List<User> contactsList;
 
-    public CustomNameCardAdapter(Context context, int resource, List<User> contacts){
+    public NameViewAdapter(Context context, int resource, List<User> contacts){
         super(context, resource, contacts);
         this.contactsList = contacts;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-
-        final User contact = contactsList.get(position);
+        final User user = contactsList.get(position);
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View row = inflater.inflate(R.layout.customized_name_card_row, null);
 
-
         TextView textView = (TextView) row.findViewById(R.id.contactName);
-        ImageView imageView = (ImageView) row.findViewById(R.id.contactMethod);
+        textView.setText(user.firstName + " " + user.lastName);
 
-        DrawableManager.getInstance().fetchDrawableOnThread(contact.imageURL, imageView);
-        textView.setText(contact.firstName + " " + contact.lastName);
+        for (int i = 0; i < user.socialMedias.size(); i++) {
+            final User.SocialMedia socialMedia = user.socialMedias.get(i);
+            ImageView imageView = (ImageView) row.findViewById(R.id.fbIV);
+            DrawableManager.getInstance().fetchDrawableOnThread(socialMedia.imageURL, imageView);
+            break;
+        }
+
         return row;
     }
 }
