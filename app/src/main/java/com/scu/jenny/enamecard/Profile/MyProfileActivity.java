@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -68,6 +69,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
     private CircleImageView profileView;
     private SlideToUnlock slideToUnlock;
+    private TextView textView;
     public static Context context;
 
     //    private ListView myListView;
@@ -75,6 +77,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     private GridViewAdapter gridAdapter;
 
     private MediaType mediaType;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,8 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
 
         gridView = (GridView) findViewById(R.id.gridView);
         reloadGridView();
+        textView = (TextView)findViewById(R.id.user_name);
+        textView.setText(CurrentUser.getUserFirstName() + " " + CurrentUser.getUserLastName());
     }
 
     @Override
