@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -81,12 +82,50 @@ public class NameCardsActivity extends AppCompatActivity {
 
         contactsListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 1:
-                        contacts.remove(position);
-                        adapter.notifyDataSetChanged();
-                        break;
+                    {
+                        User userToRemove = contacts.get(position);
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("phoneNumber", userToRemove.phoneNumber);
+                            new NetworkAsyncTask(NameCardsActivity.this, "Deleting nameCard...", new ProcessResponse() {
+                                @Override
+                                public void process(String jsonRespose) {
+                                    try {
+                                        JSONObject jsonRes = new JSONObject(jsonRespose);
+                                        if (jsonRes.has("status") && jsonRes.getString("status").equals("success")) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    contacts.remove(position);
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            });
+                                        } else {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(NameCardsActivity.this, "Server error", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    } catch (JSONException e) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(NameCardsActivity.this, "Server error", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }
+                            }).execute("DELETE", "/name-cards", jsonObject.toString());
+                            break;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 return false;
             }

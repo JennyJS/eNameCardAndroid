@@ -36,6 +36,11 @@ public class NameViewAdapter extends ArrayAdapter {
         final User user = contactsList.get(position);
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View row = inflater.inflate(R.layout.customized_name_card_row, null);
+        ImageView profileIV = (ImageView) row.findViewById(R.id.ncProfileIV);
+        if (user.imageURL != null) {
+            DrawableManager.getInstance().fetchDrawableOnThread(user.imageURL, profileIV);
+        }
+
 
         TextView textView = (TextView) row.findViewById(R.id.contactName);
         textView.setText(user.firstName + " " + user.lastName);

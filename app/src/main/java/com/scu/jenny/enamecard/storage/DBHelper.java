@@ -86,7 +86,9 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public static void init(Context context) {
-        dbHelper = new DBHelper(context);
+        if (dbHelper == null) {
+            dbHelper = new DBHelper(context);
+        }
     }
 
     public static DBHelper getInstance(){

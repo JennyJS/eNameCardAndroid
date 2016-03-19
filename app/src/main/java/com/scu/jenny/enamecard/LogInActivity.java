@@ -42,8 +42,8 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         thisActivity = this;
+        DBHelper.init(getApplicationContext());
         DBHelper dbHelper = DBHelper.getInstance();
         getApplicationContext().deleteDatabase(dbHelper.getDatabaseName());
 
