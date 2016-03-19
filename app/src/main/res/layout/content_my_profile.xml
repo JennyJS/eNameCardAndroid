@@ -22,6 +22,7 @@
         android:layout_weight="0.2"
         android:weightSum="1"
         android:background="@drawable/layout_shape"
+        android:id="@+id/profileLL"
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -72,6 +73,7 @@
         android:layout_weight="0.8"
         android:layout_marginTop="10dp"
         android:background="@drawable/layout_shape"
+        android:id="@+id/grid_view_ll"
         >
 
         <include layout="@layout/gridview" />

@@ -3,6 +3,8 @@ package com.scu.jenny.enamecard.Profile;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -100,6 +103,18 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         textView.setText(CurrentUser.getUserFirstName() + " " + CurrentUser.getUserLastName());
         phoneNumberTextView = (TextView) findViewById(R.id.user_phone_number);
         phoneNumberTextView.setText(CurrentUser.getUserPhoneNumber());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LinearLayout gridViewLL = (LinearLayout) findViewById(R.id.grid_view_ll);
+        GradientDrawable bgShape = (GradientDrawable)gridViewLL.getBackground();
+        bgShape.setColor(getResources().getColor(R.color.color5PGray));
+
+        LinearLayout profileLL = (LinearLayout) findViewById(R.id.profileLL);
+        bgShape = (GradientDrawable)profileLL.getBackground();
+        bgShape.setColor(getResources().getColor(R.color.color5PGray));
     }
 
     @Override
