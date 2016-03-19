@@ -153,7 +153,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         //Twitter
         final SocialMedia tt = CurrentUser.getTwitter();
         if(tt != null) {
-            connectionList.add(new AdapterConnector(MediaType.FACEBOOK, tt.imageURL, new View.OnClickListener() {
+            connectionList.add(new AdapterConnector(MediaType.TWITTER, tt.imageURL, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                    onTwitterLogOut();
@@ -418,7 +418,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                 Log.i("Twitter", "success");
                 final Long twitterID = twitterSessionResult.data.getUserId();
                 final String twitterUserName = twitterSessionResult.data.getUserName();
-                final String imageURL = "https://twitter.com/" + twitterUserName + "/profile_image?size=original";
+                final String imageURL = "https://twitter.com/" + twitterUserName + "/profile_image?size=mini";
                 System.out.println("Twitter URL  *****" + imageURL);
                 final SocialMedia tt = new SocialMedia("twitter", String.valueOf(twitterID), imageURL);
                 new NetworkAsyncTask(MyProfileActivity.this, "Setting up twitter", new ProcessResponse() {
@@ -437,7 +437,8 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                                 }
                             });
                         } catch (JSONException e) {
-                            Toast.makeText(MyProfileActivity.this, "Record may already exist", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(MyProfileActivity.this, "Record may already exist", Toast.LENGTH_SHORT).show();
+                            System.out.println(e.getStackTrace());
                         }
 
                     }

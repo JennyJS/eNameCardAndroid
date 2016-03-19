@@ -12,6 +12,7 @@ public class CurrentUser {
     private static User.SocialMedia twitter;
 
 
+
     public static User.SocialMedia getFacebook() {
         return facebook;
     }
@@ -38,6 +39,8 @@ public class CurrentUser {
                 facebook = socialMedia;
             } else if (socialMedia.mediaType.equals("linkedIn")){
                 linkedIn = socialMedia;
+            } else if (socialMedia.mediaType.equals("twitter")){
+                twitter = socialMedia;
             }
         }
     }
