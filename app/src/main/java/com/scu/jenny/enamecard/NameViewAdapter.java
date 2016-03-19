@@ -40,6 +40,9 @@ public class NameViewAdapter extends ArrayAdapter {
         TextView textView = (TextView) row.findViewById(R.id.contactName);
         textView.setText(user.firstName + " " + user.lastName);
 
+        TextView phoneNumberView = (TextView) row.findViewById(R.id.phoneNumber);
+        phoneNumberView.setText(user.phoneNumber);
+
         for (int i = 0; i < user.socialMedias.size(); i++) {
             final User.SocialMedia socialMedia = user.socialMedias.get(i);
             ImageView imageView = (ImageView) row.findViewById(R.id.fbIV);
