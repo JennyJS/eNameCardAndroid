@@ -49,7 +49,12 @@ public class NameCardsActivity extends AppCompatActivity {
                         DBHelper.getInstance().updateOrCreateUserRecord(user);
                         contacts.add(user);
                     }
-                    contactsListView.setAdapter(new CustomNameCardAdapter(NameCardsActivity.this, R.layout.customized_name_card_row, contactsList));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            contactsListView.setAdapter(new CustomNameCardAdapter(NameCardsActivity.this, R.layout.customized_name_card_row, contactsList));
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
