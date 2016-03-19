@@ -55,6 +55,14 @@
                 android:layout_weight="0.5"
                 android:textStyle="bold"
                 android:id="@+id/user_name"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_phone_number"
+                android:text="User's phone number"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                />
         </LinearLayout>
     </LinearLayout>
 

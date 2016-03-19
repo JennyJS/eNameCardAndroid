@@ -28,6 +28,7 @@ public class CurrentUser {
         return currentUser.firstName;
     }
     public static String getUserLastName(){return currentUser.lastName; }
+    public static String getUserPhoneNumber(){return currentUser.phoneNumber; }
 
     public static void refreshFromDB(User user) {
         facebook = null;

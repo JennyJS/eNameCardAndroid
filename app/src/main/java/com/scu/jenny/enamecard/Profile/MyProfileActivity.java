@@ -69,6 +69,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     private CircleImageView profileView;
     private SlideToUnlock slideToUnlock;
     private TextView textView;
+    private TextView phoneNumberTextView;
     public static Context context;
 
     //    private ListView myListView;
@@ -97,6 +98,8 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         reloadGridView();
         textView = (TextView)findViewById(R.id.user_name);
         textView.setText(CurrentUser.getUserFirstName() + " " + CurrentUser.getUserLastName());
+        phoneNumberTextView = (TextView) findViewById(R.id.user_phone_number);
+        phoneNumberTextView.setText(CurrentUser.getUserPhoneNumber());
     }
 
     @Override
