@@ -9,6 +9,7 @@ public class CurrentUser {
     private static User currentUser;
     private static User.SocialMedia facebook;
     private static User.SocialMedia linkedIn;
+    private static User.SocialMedia twitter;
 
 
     public static User.SocialMedia getFacebook() {
@@ -17,6 +18,7 @@ public class CurrentUser {
     public static User.SocialMedia getLinkedIn() {
         return linkedIn;
     }
+    public static User.SocialMedia getTwitter(){return twitter; }
 
 
     public static User get() { return currentUser; }

@@ -149,12 +149,26 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         gridView.invalidateViews();
         final ArrayList<AdapterConnector> connectionList = new ArrayList<>();
         connectionList.add(new AdapterConnector(MediaType.QUORA, null, null));
-        connectionList.add(new AdapterConnector(MediaType.TWITTER, null, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                twitterLogin();
-            }
-        }));
+
+        //Twitter
+        final SocialMedia tt = CurrentUser.getTwitter();
+        if(tt != null) {
+            connectionList.add(new AdapterConnector(MediaType.FACEBOOK, tt.imageURL, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   onTwitterLogOut();
+                }
+            }));
+        } else {
+            connectionList.add(new AdapterConnector(MediaType.TWITTER, null, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    twitterLogin();
+                }
+            }));
+
+        }
+
 
         // Facebook
         final SocialMedia fb = CurrentUser.getFacebook();
@@ -206,38 +220,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
         }
     }
 
-//
-//    private boolean isTwitterLoggedIn() {
-//        TwitterSession session = Twitter.getSessionManager().getActiveSession();
-//        TwitterAuthToken authToken = session.getAuthToken();
-//        String token = authToken.token;
-//        String secret = authToken.secret;
-//        return secret != null;
-//    }
 
-
-
-    private void twitterLogin() {
-        this.mediaType = MediaType.TWITTER;
-        final TwitterAuthConfig authConfig = new TwitterAuthConfig("jXx0mVmLepyR6M7OC8fDmyePL", "4br7HIvYi3oQUCjXsHBswLtIyPfUlTtLf3muP4jszeNXhAy4Gr");
-        Fabric.with(this, new Twitter(authConfig));
-        twitterAuthClient = new TwitterAuthClient();
-        twitterAuthClient.authorize(this, new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> twitterSessionResult) {
-                Log.i("Twitter", "success");
-                System.out.println("@@@@@@@@@@@ TwitterID: " + twitterSessionResult.data.getUserId() + twitterSessionResult.data.getUserName());
-
-            }
-
-            @Override
-            public void failure(TwitterException e) {
-                Log.e("Twitter", "failed");
-            }
-        });
-
-//        Twitter.logIn(MyProfileActivity.this, );
-    }
 
     /**********************************************************/
     /************** Profile View OnClickListener **************/
@@ -346,7 +329,7 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
                         }
                     }
                 }).execute("DELETE", "/user/socialMedia", CurrentUser.getFacebook().toJsonObj().toString());
-                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
+//                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
                 Toast.makeText(context, "Unlinked Facebook account", Toast.LENGTH_SHORT).show();
             }
         });
@@ -418,6 +401,108 @@ public class MyProfileActivity extends AppCompatActivity implements SlideToUnloc
     public void onBackPressed() {
         System.out.println("Disable back button");
     }
+
+
+    /**********************************************************/
+    /*************** Twitter Login / Logout CallBack ***************/
+    /**********************************************************/
+
+    private void twitterLogin() {
+        this.mediaType = MediaType.TWITTER;
+        final TwitterAuthConfig authConfig = new TwitterAuthConfig("jXx0mVmLepyR6M7OC8fDmyePL", "4br7HIvYi3oQUCjXsHBswLtIyPfUlTtLf3muP4jszeNXhAy4Gr");
+        Fabric.with(this, new Twitter(authConfig));
+        twitterAuthClient = new TwitterAuthClient();
+        twitterAuthClient.authorize(this, new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> twitterSessionResult) {
+                Log.i("Twitter", "success");
+                final Long twitterID = twitterSessionResult.data.getUserId();
+                final String twitterUserName = twitterSessionResult.data.getUserName();
+                final String imageURL = "https://twitter.com/" + twitterUserName + "/profile_image?size=original";
+                System.out.println("Twitter URL  *****" + imageURL);
+                final SocialMedia tt = new SocialMedia("twitter", String.valueOf(twitterID), imageURL);
+                new NetworkAsyncTask(MyProfileActivity.this, "Setting up twitter", new ProcessResponse() {
+                    @Override
+                    public void process(String jsonRespose) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(jsonRespose);
+                            User user = User.getUserFromJsonObj(jsonObject);
+                            DBHelper.getInstance().updateOrCreateUserRecord(user);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, "Linked Twitter account", Toast.LENGTH_SHORT).show();
+                                    reloadGridView();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            Toast.makeText(MyProfileActivity.this, "Record may already exist", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }).execute("POST", "/user/socialMedia", tt.toJsonObj().toString());
+
+
+                System.out.println("@@@@@@@@@@@ TwitterID: " + twitterSessionResult.data.getUserId() + " User name : " + twitterSessionResult.data.getUserName() + "@@@@@@@@@@@");
+            }
+
+            @Override
+            public void failure(TwitterException e) {
+                Log.e("Twitter", "failed");
+            }
+        });
+    }
+
+    private void onTwitterLogOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MyProfileActivity.this);
+
+        builder.setMessage("Log out Twitter?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //delete facebook record
+                new NetworkAsyncTask(MyProfileActivity.this, "Unlinking on server", new ProcessResponse() {
+                    @Override
+                    public void process(String jsonRespose) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(jsonRespose);
+                            User user = User.getUserFromJsonObj(jsonObject);
+                            DBHelper.getInstance().updateOrCreateUserRecord(user);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    reloadGridView();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MyProfileActivity.this, "Server error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                }).execute("DELETE", "/user/socialMedia", CurrentUser.getTwitter().toJsonObj().toString());
+//                DBHelper.getInstance().deleteFBRecordByUserID(KVStore.getCurrentUserPK());
+                Toast.makeText(context, "Unlinked Twitter account", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
 
     /**********************************************************/
     /*************** LinkedIn Login / Logout CallBack *********/
